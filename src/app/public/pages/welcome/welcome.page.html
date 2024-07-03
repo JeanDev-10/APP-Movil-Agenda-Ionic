@@ -1,16 +1,13 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>welcome</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-navbar [title]="'Agenda App'" />
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">welcome</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-button  expand="block" fill="clear" shape="round">
-    Click me
-  </ion-button>
+      <ion-text color="secondary">
+        <h1>Hola! Soy Jean Rodríguez, Desarrollador Web Fullstack</h1>
+      </ion-text>
+      <ng-lottie containerClass="moving-box" [options]="options" />
+      <ion-button color="primary" fill="outline">
+        <ion-icon slot="start" name="arrow-forward-outline"></ion-icon>
+        Ir a la aplicación
+      </ion-button>
+
 </ion-content>

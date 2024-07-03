@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+}
+
+.custom-button {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-light);
+  margin-top: 20px;
+}
+.moving-box {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}

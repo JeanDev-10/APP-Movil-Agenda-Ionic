@@ -1,19 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton } from '@ionic/angular/standalone';
-
+import {
+  IonContent,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  IonHeader,
+  IonText,
+  IonIcon,
+} from '@ionic/angular/standalone';
+import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
+import { IonicModule } from '@ionic/angular';
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.page.html',
   styleUrls: ['./welcome.page.scss'],
   standalone: true,
-  imports: [IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [
+    CommonModule,
+    FormsModule,
+    LottieComponent,
+    NavbarComponent,
+    IonicModule
+  ],
 })
-export class WelcomePage  {
+export class WelcomePage {
+  options: AnimationOptions = {
+    path: '/assets/animations/welcome.json',
+  };
 
-  constructor() { }
-
-
-
+  styles = {
+    width: '100%',
+    height: 'auto',
+  };
 }
