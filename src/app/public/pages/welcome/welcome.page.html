@@ -1,13 +1,19 @@
 <app-navbar [title]="'Agenda App'" />
 
 <ion-content [fullscreen]="true">
-      <ion-text color="secondary">
-        <h1>Hola! Soy Jean Rodríguez, Desarrollador Web Fullstack</h1>
-      </ion-text>
-      <ng-lottie containerClass="moving-box" [options]="options" />
-      <ion-button color="primary" fill="outline">
-        <ion-icon slot="start" name="arrow-forward-outline"></ion-icon>
-        Ir a la aplicación
-      </ion-button>
-
+      <div class="flex_welcome">
+        <div class="ion-margin-top">
+          <ion-text color="tertiary" class="ion-text-center">
+            <h2>¡Hola! Soy Jean Rodríguez</h2>
+            <p>Desarrollador Web Fullstack</p>
+          </ion-text>
+        </div>
+        <div>
+          <ng-lottie containerClass="moving-box" [options]="options" />
+        <ion-button color="primary" fill="outline" class="ion-align-self-center" routerLink="auth/register">
+          <ion-icon slot="start" name="arrow-forward-outline"></ion-icon>
+          Ir a la aplicación
+        </ion-button>
+        </div>
+      </div>
 </ion-content>

@@ -13,6 +13,9 @@ import {
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { IonicModule } from '@ionic/angular';
+import { arrowForwardOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.page.html',
@@ -23,7 +26,8 @@ import { IonicModule } from '@ionic/angular';
     FormsModule,
     LottieComponent,
     NavbarComponent,
-    IonicModule
+    IonicModule,
+    RouterModule
   ],
 })
 export class WelcomePage {
@@ -35,4 +39,10 @@ export class WelcomePage {
     width: '100%',
     height: 'auto',
   };
+  constructor(){
+    addIcons({
+       arrowForwardOutline,
+      // Agrega todos los íconos que necesites registrar aquí
+    });
+  }
 }

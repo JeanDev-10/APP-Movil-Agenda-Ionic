@@ -18,20 +18,12 @@ import { tokenInterceptor } from './app/core/interceptor/auth-token';
 import { ErrorHandlerApi } from './app/core/interceptor/errorHandlerApi';
 import { provideLottieOptions } from 'ngx-lottie';
 import player from 'lottie-web';
-import { addIcons } from 'ionicons';
-import {
-  arrowUndoOutline,arrowForwardOutline
-} from 'ionicons/icons';
 
 if (environment.production) {
   enableProdMode();
 }
 
-addIcons({
-  'arrow-undo-outline': arrowUndoOutline,
-  'arrow-forward-outline':arrowForwardOutline,
-  // Agrega todos los íconos que necesites registrar aquí
-});
+
 
 bootstrapApplication(AppComponent, {
   providers: [

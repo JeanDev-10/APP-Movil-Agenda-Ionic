@@ -35,3 +35,14 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+.custom-toast-success {
+  --background: #4caf50; /* Verde para éxito */
+  --color: #ffffff; /* Texto blanco */
+}
+
+.custom-toast-error {
+  --background: #f44336; /* Rojo para error */
+  --color: #ffffff; /* Texto blanco */
+}
