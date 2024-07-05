@@ -1,13 +1,41 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>home</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-navbar [title]="'Contactos'" />
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-segment
+    value="contacts"
+    color="medium"
+    (ionChange)="segmentChanged($event)"
+  >
+    <ion-segment-button value="contacts">
+      <ion-icon name="call-outline"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="favorites">
+      <ion-icon name="star-outline"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+
+  @if(selectedSegment==='contacts'){
+  <ion-item class="crear-contacto" routerLink="/dashboard/contacts/create">
+    <ion-avatar aria-hidden="true" slot="start">
+      <ion-img
+        [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'"
+      ></ion-img>
+    </ion-avatar>
+    <ion-label>Crear Contacto</ion-label>
+  </ion-item>
+  }
+
+  <ion-list>
+    @if(selectedSegment==='contacts'){
+    <app-list-contact />
+    <app-list-contact />
+    <app-list-contact />
+    } @if(selectedSegment==='favorites'){
+    <app-list-contact-favorite />
+    <app-list-contact-favorite />
+    <app-list-contact-favorite />
+    <app-list-contact-favorite />
+
+    }
+  </ion-list>
 </ion-content>
