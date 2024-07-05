@@ -1,0 +1,44 @@
+ <!-- Otras secciones de información del perfil -->
+ <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <ion-item>
+    <ion-label position="stacked">Nombres</ion-label>
+    <ion-input
+      formControlName="firstname"
+      fill="outline"
+      [clearInput]="true"
+      [counter]="true"
+      maxlength="30"
+      placeholder="Jean Pierre"
+    ></ion-input>
+    <ion-note color="danger">
+      @if(getformHasError(registerForm,'firstname','required')&&getFormHasTouch(registerForm,'firstname')){
+      Nombres es requerido }
+      @if(getformHasError(registerForm,'firstname','minlength')&&getFormHasTouch(registerForm,'firstname')){
+      Nombres debe tener al menos 3 caracteres. }
+    </ion-note>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Apellidos</ion-label>
+    <ion-input
+      formControlName="lastname"
+      fill="outline"
+      [clearInput]="true"
+      [counter]="true"
+      maxlength="50"
+      placeholder="Rodríguez"
+    ></ion-input>
+
+    <ion-note color="danger">
+      @if(getformHasError(registerForm,'lastname','required')&&getFormHasTouch(registerForm,'lastname')){
+      Nombres es requerido }
+      @if(getformHasError(registerForm,'lastname','minlength')&&getFormHasTouch(registerForm,'lastname')){
+      Nombres debe tener al menos 3 caracteres. }
+    </ion-note>
+  </ion-item>
+  <div class="flex_button_register">
+    <ion-button shape="round" size="small" [fill]="registerForm.invalid?'outline':'clear'" type="submit" [disabled]="registerForm.invalid">
+      Guardar
+    </ion-button>
+  </div>
+</form>

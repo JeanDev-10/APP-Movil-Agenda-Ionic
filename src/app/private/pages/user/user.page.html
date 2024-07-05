@@ -1,11 +1,43 @@
-<app-navbar
-
-[title]="'Perfil'"
-
-/>
+<app-navbar [title]="'Perfil'" />
 
 <ion-content [fullscreen]="true">
+  <ion-img
+    [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'"
+    alt="Foto de perfil"
+  />
 
+  <ion-segment value="perfil" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="perfil">
+      <ion-label>Datos de perfil</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="password">
+      <ion-label>Contraseña</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="settings">
+      <ion-label>Configuración</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-
+  <div class="container-information-password-profile">
+    @if(selectedSegment==='perfil'){
+    <app-edit-profile />
+    } @if(selectedSegment==='password'){
+    <app-edit-password />
+    }
+    @if(selectedSegment==='settings'){
+      <ion-toggle>Modo Light</ion-toggle>
+    }
+  </div>
+    <ion-button
+    class="flex_button_register "
+      (click)="logout()"
+      fill="clear"
+      shape="round"
+      color="danger"
+      size="default"
+    >
+      Logout
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+    </ion-button>
+  <!-- Otras propiedades del usuario -->
 </ion-content>

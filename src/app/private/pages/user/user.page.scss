@@ -1,0 +1,30 @@
+
+
+ion-img{
+  width: 50%;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 2em;
+}
+
+ion-segment{
+  margin-top: 2em;
+  padding: 1em;
+}
+ion-toggle{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+}
+.container-information-password-profile{
+  margin-top: 1em;
+}
+
+.flex_button_register {
+  display: flex;
+  margin-top: 2em;
+  flex-direction: column;
+  align-items: center;
+}
