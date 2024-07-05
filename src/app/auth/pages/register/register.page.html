@@ -1,10 +1,25 @@
 <app-navbar [title]="'Agenda App'"></app-navbar>
 
 <ion-content [fullscreen]="true">
+  <ion-header>
+    <ion-toolbar>
+      <ion-breadcrumbs  class="breadcrumbs-left">
+        <ion-breadcrumb routerLink="/">
+          Bienvenida
+          <ion-icon slot="separator" name="arrow-forward-circle"></ion-icon>
+        </ion-breadcrumb>
+        <ion-breadcrumb >
+          Registro
+          <ion-icon slot="separator" name="arrow-forward-circle"></ion-icon>
+        </ion-breadcrumb>
+      </ion-breadcrumbs>
+    </ion-toolbar>
+  </ion-header>
+
+
+
   <div class="flex-register">
-    <ion-text color="secondary" class="ion-text-center">
-      <h5>Regístrate</h5>
-    </ion-text>
+    <ng-lottie  [options]="options" [styles]="styles"></ng-lottie>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <ion-item>
         <ion-label position="stacked">Nombres</ion-label>
@@ -50,7 +65,7 @@
           fill="outline"
           [clearInput]="true"
           [counter]="true"
-          maxlength="20"
+          maxlength="50"
           type="email"
           placeholder="example@hotmail.com"
         ></ion-input>
@@ -75,7 +90,7 @@
           <ion-button
             (click)="SeePassword('password')"
             fill="clear"
-            [color]="registerForm.get('password')?.invalid&&getFormHasTouch('confirmPassword')?'danger':'primary'"
+            [color]="registerForm.get('password')?.invalid&&getFormHasTouch('password')?'danger':'primary'"
             slot="end"
             aria-label="Show/hide"
           >

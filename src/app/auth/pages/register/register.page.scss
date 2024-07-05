@@ -1,5 +1,12 @@
-.flex-register{
-  margin-top: 3em;
+.flex-register {
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  form {
+    width: 100%;
+  }
 }
 
 .flex_button_register {
@@ -10,4 +17,15 @@
 
 ion-item {
   margin-bottom: 20px;
+}
+
+.breadcrumbs-left {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 16px; /* Ajustar según sea necesario */
+  font-size: 12px; /* Ajustar el tamaño del texto según sea necesario */
+}
+
+.breadcrumbs-left ion-breadcrumb {
+  font-size: 12px; /* Asegurarse de que el tamaño se aplique a los breadcrumbs */
 }
