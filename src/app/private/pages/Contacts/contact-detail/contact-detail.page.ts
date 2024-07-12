@@ -11,7 +11,7 @@ import { IonicModule } from '@ionic/angular';
   standalone: true,
   imports: [IonicModule,NavbarComponent, CommonModule, FormsModule]
 })
-export class ContactDetailPage implements OnInit {
+export default class ContactDetailPage implements OnInit {
 
   constructor() { }
 

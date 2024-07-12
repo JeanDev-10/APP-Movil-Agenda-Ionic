@@ -37,7 +37,7 @@ import { EditPasswordComponent } from './components/edit-password/edit-password.
     EditPasswordComponent,
   ],
 })
-export class UserPage implements OnInit {
+export default class UserPage implements OnInit {
   selectedSegment: string = 'perfil';
   private toastService = inject(ToastService);
 

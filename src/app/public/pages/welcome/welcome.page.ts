@@ -1,15 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonTitle,
-  IonToolbar,
-  IonButton,
-  IonHeader,
-  IonText,
-  IonIcon,
-} from '@ionic/angular/standalone';
+
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { IonicModule } from '@ionic/angular';
@@ -30,7 +22,7 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ],
 })
-export class WelcomePage {
+export default class WelcomePage {
   options: AnimationOptions = {
     path: '/assets/animations/welcome.json',
   };

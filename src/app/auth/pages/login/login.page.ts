@@ -35,7 +35,7 @@ import { AnimationOptions, LottieComponent } from 'ngx-lottie';
     LottieComponent,
   ],
 })
-export class LoginPage implements OnInit {
+export default class LoginPage implements OnInit {
   /**
    * ?Inyectando servicios
    */
