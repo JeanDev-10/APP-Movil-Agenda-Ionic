@@ -39,7 +39,7 @@ import { AnimationOptions, LottieComponent } from 'ngx-lottie';
     LottieComponent,
   ],
 })
-export class RegisterPage implements OnInit {
+export default class RegisterPage implements OnInit {
   /**
    * ?Inyectando servicios
    */

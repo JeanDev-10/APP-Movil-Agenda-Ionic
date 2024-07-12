@@ -15,7 +15,7 @@ export const PRIVATE_ROUTES: Routes = [
         path: 'user',
         title:'Usuario',
         loadComponent: () =>
-          import('./pages/user/user.page').then((c) => c.UserPage),
+          import('./pages/user/user.page')
       },
     ],
   },

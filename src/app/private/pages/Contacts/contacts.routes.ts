@@ -11,16 +11,12 @@ export const CONTACTS_ROUTES: Routes = [
     path: 'create',
     title: 'Crear Contacto',
     loadComponent: () =>
-      import('./contact-create/contact-create.page').then(
-        (c) => c.ContactCreatePage
-      ),
+      import('./contact-create/contact-create.page')
   },
   {
     path: ':id',
     title: 'Detalle de Contacto',
     loadComponent: () =>
-      import('./contact-detail/contact-detail.page').then(
-        (c) => c.ContactDetailPage
-      ),
+      import('./contact-detail/contact-detail.page')
   },
 ];

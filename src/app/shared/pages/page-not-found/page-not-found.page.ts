@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [IonButton, IonIcon, IonText, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,NavbarComponent,LottieComponent,RouterModule]
 })
-export class PageNotFoundPage  {
+export default class PageNotFoundPage  {
   options: AnimationOptions = {
     path: '/assets/animations/page-not-found.json',
   };
