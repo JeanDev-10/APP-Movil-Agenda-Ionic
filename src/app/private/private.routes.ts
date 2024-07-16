@@ -7,7 +7,7 @@ export const PRIVATE_ROUTES: Routes = [
     component: TabsPage,
     children: [
       {
-        path:'',
+        path:'contacts',
         loadChildren:()=>import('./pages/Contacts/contacts.routes')
       },
 
@@ -17,11 +17,17 @@ export const PRIVATE_ROUTES: Routes = [
         loadComponent: () =>
           import('./pages/user/user.page')
       },
+      {
+        path: '',
+        redirectTo: 'contacts',
+        pathMatch: 'full'
+      }
     ],
   },
   {
-    path: '',
-    redirectTo: '/dashboard/contacts',
-    pathMatch: 'full',
-  },
+    path:'',
+    pathMatch:'full',
+    redirectTo:'contacts'
+  }
+
 ];

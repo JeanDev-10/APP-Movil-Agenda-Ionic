@@ -87,7 +87,9 @@
       </ion-item>
 
       <div class="flex_button_register">
-        <ion-button (click)="toggleEditMode()" [fill]="'outline'" type="button">
+        <ion-button (click)="toggleEditMode()" [fill]="'outline'" type="button"
+        [disabled]="contactForm.invalid && isEditMode"
+        >
           <ion-icon name="pencil-outline"></ion-icon>
           {{ isEditMode ? 'Guardar' : 'Editar' }}
         </ion-button>

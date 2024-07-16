@@ -37,8 +37,20 @@
     </ion-note>
   </ion-item>
   <div class="flex_button_register">
-    <ion-button shape="round" size="small" [fill]="registerForm.invalid?'outline':'clear'" type="submit" [disabled]="registerForm.invalid">
-      Guardar
+    <ion-button
+    [disabled]="registerForm.invalid && isEditing"
+    shape="round"  fill="outline" (click)="toggleEdit()">
+      <ion-icon name="pencil-outline"></ion-icon>
+      {{ isEditing ? 'Guardar' : 'Editar' }}
     </ion-button>
+    <ion-button
+          *ngIf="isEditing"
+          (click)="cancelEdit()"
+          fill="outline"
+          type="button"
+          color="danger"
+        >
+          Cancelar
+        </ion-button>
   </div>
 </form>

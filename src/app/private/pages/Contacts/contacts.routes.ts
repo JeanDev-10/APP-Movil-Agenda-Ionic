@@ -8,14 +8,14 @@ export default[
       import('../home/home.page').then((c) => c.HomePage),
   },
   {
-    path: 'contacts/create',
+    path: 'create',
     pathMatch:'full',
     title: 'Crear Contacto',
     loadComponent: () =>
       import('./contact-create/contact-create.page')
   },
   {
-    path: 'contacts/:id',
+    path: ':id',
     title: 'Detalle de Contacto',
     loadComponent: () =>
       import('./contact-detail/contact-detail.page')
