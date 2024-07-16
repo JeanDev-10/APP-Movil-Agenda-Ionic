@@ -24,7 +24,10 @@
     } @if(selectedSegment==='password'){
     <app-edit-password />
     } @if(selectedSegment==='settings'){
-    <ion-toggle>Modo Light</ion-toggle>
+    <ion-toggle (ionChange)="toogleTheme()"
+      >Cambiar modo
+      <ion-icon name="sunny"></ion-icon
+    ></ion-toggle>
     <ion-button
       class="flex_button_register"
       (click)="logout()"
