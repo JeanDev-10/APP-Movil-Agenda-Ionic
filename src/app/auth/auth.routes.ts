@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const AUTH_ROUTES: Routes = [
+export default [
   {
     path: '',
     redirectTo: 'register',
@@ -19,4 +19,4 @@ export const AUTH_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/register/register.page')
   },
-];
+] as Routes;

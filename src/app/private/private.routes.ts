@@ -7,8 +7,8 @@ export const PRIVATE_ROUTES: Routes = [
     component: TabsPage,
     children: [
       {
-        path:'contacts',
-        loadChildren:()=>import('./pages/Contacts/contacts.routes').then(contacts => contacts.CONTACTS_ROUTES)
+        path:'',
+        loadChildren:()=>import('./pages/Contacts/contacts.routes')
       },
 
       {
