@@ -3,7 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { personOutline, mail, logOutOutline, eyeOffOutline, eyeOutline } from 'ionicons/icons';
+import { personOutline, mail, logOutOutline, eyeOffOutline, eyeOutline, pencilOutline } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class EditProfileComponent  implements OnInit {
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
   registerForm!: FormGroup;
-
+  isEditing: boolean = false;
   constructor() {
     this.registerRegisterForm();
     this.registerIcons();
@@ -26,15 +26,14 @@ export class EditProfileComponent  implements OnInit {
   ngOnInit() {}
   onSubmit() {
     if (this.registerForm.valid) {
-      /**
-       * ! ENVIAR PETICIÓN HTTP
-       *  */
       console.log(this.registerForm.value);
+      this.toastService.presentToastSucess('¡Perfil actualizado!');
+      this.isEditing = false;
+      this.registerForm.disable();
     } else {
-      /**
-       * ! MOSTRAR TOAST DE FORMULARIO INVALIDO
-       *  */
-      this.toastService.presentToastError('¡Formulario invalido!');
+      this.isEditing=!this.isEditing;
+      this.registerForm.enable();
+      this.toastService.presentToastError('¡Formulario inválido!');
     }
   }
   getformHasError(form:FormGroup,field: string, rule: string): boolean | undefined {
@@ -48,6 +47,20 @@ export class EditProfileComponent  implements OnInit {
       firstname: ['', [Validators.required, Validators.minLength(3)]],
       lastname: ['', [Validators.required, Validators.minLength(3)]],
     });
+    this.registerForm.disable()
+  }
+
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+    if (this.isEditing) {
+      this.registerForm.enable();
+    } else {
+      this.onSubmit();
+    }
+  }
+  cancelEdit(){
+    this.isEditing = false;
+    this.registerForm.disable();
   }
   private registerIcons() {
     addIcons({
@@ -55,7 +68,8 @@ export class EditProfileComponent  implements OnInit {
       mail,
       logOutOutline,
       eyeOffOutline,
-      eyeOutline
+      eyeOutline,
+      pencilOutline
     });
   }
 }

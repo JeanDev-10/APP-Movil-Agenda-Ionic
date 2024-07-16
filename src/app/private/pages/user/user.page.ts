@@ -16,6 +16,7 @@ import {
   personOutline,
   eyeOffOutline,
   eyeOutline,
+  sunny,
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { passwordMatchValidatorProfile } from 'src/app/core/helpers/validators-new-password';
@@ -40,19 +41,25 @@ import { EditPasswordComponent } from './components/edit-password/edit-password.
 export default class UserPage implements OnInit {
   selectedSegment: string = 'perfil';
   private toastService = inject(ToastService);
-
+  darkMode: boolean = true;
   constructor() {
-    this.registerIcons()
+    this.registerIcons();
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    this.darkMode = prefersDark.matches;
   }
 
   ngOnInit() {}
-  segmentChanged(event:any) {
+  segmentChanged(event: any) {
     this.selectedSegment = event.detail.value;
   }
   logout() {
     this.toastService.presentToastSucess('¡Sesión cerrada exitosa!');
   }
-  registerIcons(){
-    addIcons({logOutOutline})
+  registerIcons() {
+    addIcons({ logOutOutline,sunny });
+  }
+  toogleTheme() {
+    this.darkMode = !this.darkMode;
+    document.body.classList.toggle( 'dark' );
   }
 }

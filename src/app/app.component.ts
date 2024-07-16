@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +8,24 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private platform: Platform) {
+      this.initializeApp();
+  }
+
+    initializeApp() {
+        this.platform.ready().then(() => {
+            // this.statusBar.styleDefault();
+            // this.splashScreen.hide();
+
+            this.checkDarkTheme();
+        });
+
+    }
+
+    checkDarkTheme() {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+        if ( prefersDark.matches ) {
+            document.body.classList.toggle( 'dark' );
+        }
+    }
 }
