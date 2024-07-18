@@ -19,6 +19,7 @@ import {
   starOutline,
   starHalfOutline,
   closeCircleOutline,
+  star,
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { RouterModule } from '@angular/router';
@@ -103,8 +104,9 @@ export default class ContactDetailPage implements OnInit {
       arrowForwardCircle,
       pencilOutline,
       starOutline,
-      starHalfOutline,
-      closeCircleOutline
+      star,
+      closeCircleOutline,
+
     });
   }
   toggleEditMode() {

@@ -75,6 +75,9 @@
       </ion-item>
 
       <div class="flex_button_register">
+        <ion-text color="secondary" routerLink="/auth/register">
+          <p>¿No tienes cuenta?</p>
+        </ion-text>
         <ion-button
           [fill]="loginForm.invalid?'outline':'clear'"
           type="submit"
@@ -83,9 +86,7 @@
           <ion-icon name="person-add-outline"></ion-icon>
           Iniciar Sesión
         </ion-button>
-        <ion-text color="secondary" routerLink="/auth/register">
-          <p>¿No tienes cuenta?</p>
-        </ion-text>
+
       </div>
     </form>
   </div>

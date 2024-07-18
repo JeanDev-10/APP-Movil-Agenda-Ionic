@@ -1,5 +1,5 @@
- <!-- Otras secciones de información del perfil -->
- <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<!-- Otras secciones de información del perfil -->
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <ion-item>
     <ion-label position="stacked">Nombres</ion-label>
     <ion-input
@@ -33,25 +33,28 @@
       @if(getformHasError(registerForm,'lastname','required')&&getFormHasTouch(registerForm,'lastname')){
       Apellidos es requerido }
       @if(getformHasError(registerForm,'lastname','minlength')&&getFormHasTouch(registerForm,'lastname')){
-        Apellidos debe tener al menos 3 caracteres. }
+      Apellidos debe tener al menos 3 caracteres. }
     </ion-note>
   </ion-item>
   <div class="flex_button_register">
     <ion-button
-    [disabled]="registerForm.invalid && isEditing"
-    shape="round"  fill="outline" (click)="toggleEdit()">
-      <ion-icon name="pencil-outline"></ion-icon>
-      {{ isEditing ? 'Guardar' : 'Editar' }}
+      [disabled]="registerForm.invalid && isEditing"
+      shape="round"
+      fill="outline"
+      (click)="toggleEdit()"
+    >
+      <ion-icon slot="start" name="pencil-outline"></ion-icon>
+      {{ isEditing ? "Guardar" : "Editar" }}
     </ion-button>
     <ion-button
-          *ngIf="isEditing"
-          (click)="cancelEdit()"
-          fill="outline"
-          type="button"
-          color="danger"
-        >
-        <ion-icon name="close-circle-outline"></ion-icon>
-          Cancelar
-        </ion-button>
+      *ngIf="isEditing"
+      (click)="cancelEdit()"
+      fill="outline"
+      type="button"
+      color="danger"
+    >
+      <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+      Cancelar
+    </ion-button>
   </div>
 </form>
