@@ -15,6 +15,7 @@ import { ToastService } from 'src/app/core/services/toast.service';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './components/edit-password/edit-password.component';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
+import { splitName } from 'src/app/core/helpers/AvatarNameContact';
 
 @Component({
   selector: 'app-user',
@@ -34,6 +35,8 @@ import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initia
 })
 export default class UserPage implements OnInit {
   selectedSegment: string = 'perfil';
+  firstName:string="";
+  lastName:string="";
   private toastService = inject(ToastService);
   darkMode: boolean = true;
   constructor() {
@@ -42,7 +45,13 @@ export default class UserPage implements OnInit {
     this.darkMode = prefersDark.matches;
   }
 
-  ngOnInit() {}
+
+  ngOnInit() {
+    this.setAvatarProfile("Jean","Rodriguez")
+  }
+  handleAvatarNaem(event:any){
+    this.setAvatarProfile(event.firstName,event.lastName)
+  }
   segmentChanged(event: any) {
     this.selectedSegment = event.detail.value;
   }
@@ -56,5 +65,9 @@ export default class UserPage implements OnInit {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle( 'dark' );
   }
+  private setAvatarProfile(firstName:string,lastName:string){
 
+      this.firstName = firstName;
+      this.lastName = lastName;
+  }
 }

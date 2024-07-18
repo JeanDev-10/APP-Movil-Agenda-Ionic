@@ -31,9 +31,9 @@
 
     <ion-note color="danger">
       @if(getformHasError(registerForm,'lastname','required')&&getFormHasTouch(registerForm,'lastname')){
-      Nombres es requerido }
+      Apellidos es requerido }
       @if(getformHasError(registerForm,'lastname','minlength')&&getFormHasTouch(registerForm,'lastname')){
-      Nombres debe tener al menos 3 caracteres. }
+        Apellidos debe tener al menos 3 caracteres. }
     </ion-note>
   </ion-item>
   <div class="flex_button_register">
@@ -50,6 +50,7 @@
           type="button"
           color="danger"
         >
+        <ion-icon name="close-circle-outline"></ion-icon>
           Cancelar
         </ion-button>
   </div>

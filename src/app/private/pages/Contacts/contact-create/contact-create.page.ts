@@ -15,6 +15,7 @@ import { ToastService } from 'src/app/core/services/toast.service';
 import { RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 import { splitName } from 'src/app/core/helpers/AvatarNameContact';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-contact-create',
@@ -41,7 +42,9 @@ export default class ContactCreatePage implements OnInit {
   constructor() {
     this.registerForm();
     this.registerIcons();
-    this.contactForm.get('name')?.valueChanges.subscribe((data: string) => {
+    this.contactForm.get('name')?.valueChanges.pipe(
+      debounceTime(300),
+    ).subscribe((data: string) => {
       const { firstName, lastName } = splitName(data);
       this.firstName = firstName;
       this.lastName = lastName;

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { personOutline, mail, logOutOutline, eyeOffOutline, eyeOutline, pencilOutline } from 'ionicons/icons';
+import { personOutline, mail, logOutOutline, eyeOffOutline, eyeOutline, pencilOutline, closeCircleOutline } from 'ionicons/icons';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
@@ -18,12 +19,30 @@ export class EditProfileComponent  implements OnInit {
   private fb = inject(FormBuilder);
   registerForm!: FormGroup;
   isEditing: boolean = false;
+  backUpForm:any
+  @Output() avatarName = new EventEmitter<{ firstName: string, lastName: string }>();
   constructor() {
     this.registerRegisterForm();
     this.registerIcons();
+    this.registerForm.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged((prev, curr) => prev.firstname === curr.firstname && prev.lastname === curr.lastname)
+      )
+      .subscribe(values => {
+        this.avatarName.emit({ firstName: values.firstname, lastName: values.lastname });
+      });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Simulación de la carga de datos originales
+    const initialData = {
+      firstname: 'Jean',
+      lastname: 'Rodríguez',
+    };
+    this.registerForm.patchValue(initialData);
+    this.backUpForm = { ...initialData }; // Guardar una copia de los datos originales
+  }
   onSubmit() {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
@@ -61,6 +80,7 @@ export class EditProfileComponent  implements OnInit {
   cancelEdit(){
     this.isEditing = false;
     this.registerForm.disable();
+    this.registerForm.reset(this.backUpForm);
   }
   private registerIcons() {
     addIcons({
@@ -69,7 +89,8 @@ export class EditProfileComponent  implements OnInit {
       logOutOutline,
       eyeOffOutline,
       eyeOutline,
-      pencilOutline
+      pencilOutline,
+      closeCircleOutline
     });
   }
 }
