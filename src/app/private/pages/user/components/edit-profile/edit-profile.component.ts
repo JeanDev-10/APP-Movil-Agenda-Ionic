@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { personOutline, mail, logOutOutline, eyeOffOutline, eyeOutline, pencilOutline, closeCircleOutline } from 'ionicons/icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-edit-profile',
@@ -26,7 +27,7 @@ export class EditProfileComponent  implements OnInit {
     this.registerIcons();
     this.registerForm.valueChanges
       .pipe(
-        debounceTime(300),
+        debounceTime(300),takeUntilDestroyed(),
         distinctUntilChanged((prev, curr) => prev.firstname === curr.firstname && prev.lastname === curr.lastname)
       )
       .subscribe(values => {

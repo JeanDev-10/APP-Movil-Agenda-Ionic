@@ -16,7 +16,7 @@ import { RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 import { splitName } from 'src/app/core/helpers/AvatarNameContact';
 import { debounceTime } from 'rxjs';
-
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-contact-create',
   templateUrl: './contact-create.page.html',
@@ -44,6 +44,7 @@ export default class ContactCreatePage implements OnInit {
     this.registerIcons();
     this.contactForm.get('name')?.valueChanges.pipe(
       debounceTime(300),
+      takeUntilDestroyed()
     ).subscribe((data: string) => {
       const { firstName, lastName } = splitName(data);
       this.firstName = firstName;
@@ -92,3 +93,7 @@ export default class ContactCreatePage implements OnInit {
     }
   }
 }
+function takeUntilDestroy(): import("rxjs").OperatorFunction<any, unknown> {
+  throw new Error('Function not implemented.');
+}
+

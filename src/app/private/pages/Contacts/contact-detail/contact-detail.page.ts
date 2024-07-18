@@ -23,6 +23,7 @@ import {
 import { ToastService } from 'src/app/core/services/toast.service';
 import { RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-contact-detail',
@@ -53,7 +54,7 @@ export default class ContactDetailPage implements OnInit {
     this.registerIcons();
     this.contactForm.disable();
       this.name?.valueChanges.pipe(
-        debounceTime(300),
+        debounceTime(300),takeUntilDestroyed()
       ).subscribe((data: string) => {
         this.setAvatarProfile(data)
     });
