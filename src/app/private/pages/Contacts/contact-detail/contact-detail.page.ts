@@ -1,3 +1,4 @@
+import { debounceTime } from 'rxjs';
 import { splitName } from './../../../../core/helpers/AvatarNameContact';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -17,6 +18,7 @@ import {
   pencilOutline,
   starOutline,
   starHalfOutline,
+  closeCircleOutline,
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { RouterModule } from '@angular/router';
@@ -45,23 +47,34 @@ export default class ContactDetailPage implements OnInit {
   firstName: string = '';
   lastName: string = '';
   contactForm!: FormGroup;
+  backUpForm:any;
   constructor() {
     this.registerForm();
     this.registerIcons();
     this.contactForm.disable();
-      this.name?.valueChanges.subscribe((data: string) => {
-      const { firstName, lastName } = splitName(data);
-      this.firstName = firstName;
-      this.lastName = lastName;
+      this.name?.valueChanges.pipe(
+        debounceTime(300),
+      ).subscribe((data: string) => {
+        this.setAvatarProfile(data)
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Simulación de la carga de datos originales
+    const initialData = {
+      name: 'Jean Rodriguez',
+      phone: '0963150796',
+      nickname: 'JP'
+    };
+    this.setAvatarProfile(initialData.name)
+    this.contactForm.patchValue(initialData);
+    this.backUpForm = { ...initialData }; // Guardar una copia de los datos originales
+  }
 
   private registerForm() {
     this.contactForm = this.fb.group({
       name: [
-        'jean pierre',
+        '',
         [
           Validators.required,
           Validators.minLength(3),
@@ -90,6 +103,7 @@ export default class ContactDetailPage implements OnInit {
       pencilOutline,
       starOutline,
       starHalfOutline,
+      closeCircleOutline
     });
   }
   toggleEditMode() {
@@ -112,7 +126,7 @@ export default class ContactDetailPage implements OnInit {
   cancelEdit() {
     this.isEditMode = false;
     this.contactForm.disable();
-    // Aquí se puede agregar lógica para restablecer el formulario a su estado original si es necesario
+    this.contactForm.reset(this.backUpForm);
   }
   createContact() {
     if (this.contactForm.valid) {
@@ -124,6 +138,11 @@ export default class ContactDetailPage implements OnInit {
       this.isEditMode = !this.isEditMode;
       this.contactForm.enable();
     }
+  }
+  private setAvatarProfile(data:any){
+    const { firstName, lastName } = splitName(data);
+      this.firstName = firstName;
+      this.lastName = lastName;
   }
 
 }

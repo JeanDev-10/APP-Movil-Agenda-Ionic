@@ -27,7 +27,7 @@
 
 
 .avatar {
-  color: #fff;
+  color: --ion-color-primary-contrast;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,7 +45,8 @@
 }
 
 .avatar.large {
-  width: 100px; /* Tamaño grande para perfiles */
-  height: 100px; /* Tamaño grande para perfiles */
-  font-size: 36px; /* Tamaño de fuente adecuado */
+  width: 150px; /* Tamaño grande para perfiles */
+  height: 150px; /* Tamaño grande para perfiles */
+  font-size: 46px; /* Tamaño de fuente adecuado */
+  margin-bottom: 1em;
 }
