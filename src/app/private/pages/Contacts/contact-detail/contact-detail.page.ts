@@ -1,3 +1,4 @@
+import { splitName } from './../../../../core/helpers/AvatarNameContact';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -19,6 +20,7 @@ import {
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { RouterModule } from '@angular/router';
+import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 
 @Component({
   selector: 'app-contact-detail',
@@ -32,6 +34,7 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
+    AvatarInitialsComponent
   ],
 })
 export default class ContactDetailPage implements OnInit {
@@ -39,10 +42,18 @@ export default class ContactDetailPage implements OnInit {
   private toastService = inject(ToastService);
   isEditMode = false;
   isContactFavorite = false;
+  firstName: string = '';
+  lastName: string = '';
   contactForm!: FormGroup;
   constructor() {
     this.registerForm();
     this.registerIcons();
+    this.contactForm.disable();
+      this.name?.valueChanges.subscribe((data: string) => {
+      const { firstName, lastName } = splitName(data);
+      this.firstName = firstName;
+      this.lastName = lastName;
+    });
   }
 
   ngOnInit() {}
@@ -50,7 +61,7 @@ export default class ContactDetailPage implements OnInit {
   private registerForm() {
     this.contactForm = this.fb.group({
       name: [
-        '',
+        'jean pierre',
         [
           Validators.required,
           Validators.minLength(3),
@@ -114,4 +125,5 @@ export default class ContactDetailPage implements OnInit {
       this.contactForm.enable();
     }
   }
+
 }

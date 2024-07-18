@@ -17,9 +17,7 @@
   @if(selectedSegment==='contacts'){
   <ion-item class="crear-contacto" routerLink="/dashboard/contacts/create">
     <ion-avatar aria-hidden="true" slot="start">
-      <ion-img
-        [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'"
-      ></ion-img>
+      <app-avatar-initials firstName="C" lastName="C" customClass="small" />
     </ion-avatar>
     <ion-label>Crear Contacto</ion-label>
   </ion-item>
@@ -31,10 +29,9 @@
     <app-list-contact />
     <app-list-contact />
     } @if(selectedSegment==='favorites'){
-    <app-list-contact-favorite />
-    <app-list-contact-favorite />
-    <app-list-contact-favorite />
-    <app-list-contact-favorite />
+    <app-list-contact />
+    <app-list-contact />
+    <app-list-contact />
 
     }
   </ion-list>

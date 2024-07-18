@@ -26,7 +26,12 @@ ion-img{
   align-items: center;
   justify-content: center;
 }
-
+.container-avatar{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 ion-item {
   margin-bottom: 20px;
 }

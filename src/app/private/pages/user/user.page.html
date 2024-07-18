@@ -1,11 +1,10 @@
 <app-navbar [title]="'Perfil'" />
 
 <ion-content [fullscreen]="true">
-  <ion-img
-    [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'"
-    alt="Foto de perfil"
-  />
 
+  <ion-avatar>
+    <app-avatar-initials [firstName]="'jean'" [lastName]="'rodriguez'" customClass="large" />
+  </ion-avatar>
   <ion-segment value="perfil" (ionChange)="segmentChanged($event)">
     <ion-segment-button value="perfil">
       <ion-label>Datos de perfil</ion-label>
