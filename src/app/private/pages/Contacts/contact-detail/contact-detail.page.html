@@ -17,7 +17,11 @@
   </ion-header>
   <div class="container">
     <div class="container-avatar">
-      <app-avatar-initials [firstName]="firstName" [lastName]="lastName" customClass="large" />
+      <app-avatar-initials
+        [firstName]="firstName"
+        [lastName]="lastName"
+        customClass="large"
+      />
     </div>
     <form [formGroup]="contactForm" (submit)="createContact()">
       <ion-item>
@@ -85,11 +89,14 @@
         </ion-note>
       </ion-item>
 
-      <div class="flex_button_register">
-        <ion-button (click)="toggleEditMode()" [fill]="'outline'" type="button"
-        [disabled]="contactForm.invalid && isEditMode"
+      <div class="flex_button_favorites">
+        <ion-button
+          (click)="toggleEditMode()"
+          [fill]="'outline'"
+          type="button"
+          [disabled]="contactForm.invalid && isEditMode"
         >
-          <ion-icon name="pencil-outline"></ion-icon>
+          <ion-icon name="pencil-outline" slot="start"></ion-icon>
           {{ isEditMode ? 'Guardar' : 'Editar' }}
         </ion-button>
         <ion-button
@@ -99,14 +106,21 @@
           type="button"
           color="danger"
         >
-        <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+          <ion-icon name="close-circle-outline" slot="start"></ion-icon>
           Cancelar
+        </ion-button>
+
+      </div>
+      <div class="flex_button_favorites">
+        <ion-button (click)="deleteContact()" [fill]="'outline'" type="button" color="danger">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>Eliminar
         </ion-button>
       </div>
       <div class="flex_button_favorites">
         <ion-button (click)="addFavorites()" color="warning" fill="outline">
           <ion-icon
-            [name]="isContactFavorite?'star-half-outline':'star-outline'"
+            [name]="isContactFavorite?'star':'star-outline'"
+            slot="start"
           ></ion-icon>
           {{isContactFavorite?'Quitar de':'Añadir a'}} Favoritos
         </ion-button>

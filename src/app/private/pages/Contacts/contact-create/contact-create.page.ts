@@ -85,6 +85,7 @@ export default class ContactCreatePage implements OnInit {
     addIcons({ personAddOutline, arrowForwardCircle });
   }
 
+
   createContact() {
     if (this.contactForm.valid) {
       console.log(this.contactForm.value);
@@ -92,8 +93,5 @@ export default class ContactCreatePage implements OnInit {
       this.toastService.presentToastError('¡Formulario invalido!');
     }
   }
-}
-function takeUntilDestroy(): import("rxjs").OperatorFunction<any, unknown> {
-  throw new Error('Function not implemented.');
 }
 

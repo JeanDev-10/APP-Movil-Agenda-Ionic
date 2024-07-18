@@ -13,6 +13,9 @@ ion-segment{
   margin-top: 6em;
   padding: 1em;
 }
+ion-icon{
+  font-size: 1.5em;
+}
 ion-toggle{
   display: flex;
   justify-content: center;
@@ -24,9 +27,15 @@ ion-toggle{
 }
 
 .flex_button_register {
-  width: 25%;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 2em;
+}
+.flex_mode_dark_light{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 

@@ -153,13 +153,14 @@
       </ion-item>
 
       <div class="flex_button_register">
+        <ion-text color="secondary" routerLink="/auth/login">
+          <p>¿Ya tienes cuenta?</p>
+        </ion-text>
         <ion-button [fill]="registerForm.invalid?'outline':'clear'" type="submit" [disabled]="registerForm.invalid">
           <ion-icon name="person-add-outline"></ion-icon>
           Registrarse
         </ion-button>
-        <ion-text color="secondary" routerLink="/auth/login">
-          <p>¿Ya tienes cuenta?</p>
-        </ion-text>
+
       </div>
     </form>
   </div>

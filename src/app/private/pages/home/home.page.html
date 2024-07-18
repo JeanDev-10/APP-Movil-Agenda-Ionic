@@ -7,14 +7,37 @@
     (ionChange)="segmentChanged($event)"
   >
     <ion-segment-button value="contacts">
-      <ion-icon name="call-outline"></ion-icon>
+      <ion-icon
+        [name]="selectedSegment==='contacts'?'call':'call-outline'"
+      ></ion-icon>
     </ion-segment-button>
     <ion-segment-button value="favorites">
-      <ion-icon name="star-outline"></ion-icon>
+      <ion-icon
+        [name]="selectedSegment==='favorites'?'star':'star-outline'"
+      ></ion-icon>
     </ion-segment-button>
   </ion-segment>
-
+  <div class="flex_search_and_filter">
+    <ion-searchbar
+      [debounce]="1000"
+      (ionInput)="handleInputContacts($event,'contacts')"
+    >
+    </ion-searchbar>
+    <ion-item>
+      <ion-select [label]="selectedFilter" placeholder="Filtrar por" value="name"  (ionChange)="handleChangeFilter($event)">
+        <ion-icon
+          name="filter"
+          slot="end"
+          size="default"
+        ></ion-icon>
+        <ion-select-option value="name">Nombre</ion-select-option>
+        <ion-select-option value="phone">Telefono</ion-select-option>
+        <ion-select-option value="nickname">Apodo</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
   @if(selectedSegment==='contacts'){
+
   <ion-item class="crear-contacto" routerLink="/dashboard/contacts/create">
     <ion-avatar aria-hidden="true" slot="start">
       <app-avatar-initials firstName="C" lastName="C" customClass="small" />
@@ -25,10 +48,12 @@
 
   <ion-list>
     @if(selectedSegment==='contacts'){
+
     <app-list-contact />
     <app-list-contact />
     <app-list-contact />
     } @if(selectedSegment==='favorites'){
+
     <app-list-contact />
     <app-list-contact />
     <app-list-contact />

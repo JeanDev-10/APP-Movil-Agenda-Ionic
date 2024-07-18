@@ -2,7 +2,11 @@
 
 <ion-content [fullscreen]="true">
   <ion-avatar>
-    <app-avatar-initials [firstName]="firstName" [lastName]="lastName" customClass="large" />
+    <app-avatar-initials
+      [firstName]="firstName"
+      [lastName]="lastName"
+      customClass="large"
+    />
   </ion-avatar>
   <ion-segment value="perfil" (ionChange)="segmentChanged($event)">
     <ion-segment-button value="perfil">
@@ -22,9 +26,11 @@
     } @if(selectedSegment==='password'){
     <app-edit-password />
     } @if(selectedSegment==='settings'){
-    <ion-toggle (ionChange)="toogleTheme()"
-      >Cambiar modo <ion-icon name="sunny"></ion-icon
-    ></ion-toggle>
+    <div class="flex_mode_dark_light">
+      <ion-toggle (ionChange)="toogleTheme()">
+      Cambiar modo Oscuro/Claro
+    </ion-toggle>
+    </div>
     <div class="flex_button_register">
       <ion-button
         (click)="logout()"
