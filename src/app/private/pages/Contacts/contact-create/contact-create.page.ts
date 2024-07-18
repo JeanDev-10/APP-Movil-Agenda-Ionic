@@ -10,7 +10,7 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { addIcons } from 'ionicons';
-import { arrowForwardCircle, personAddOutline, trashOutline } from 'ionicons/icons';
+import { arrowForwardCircle, personAddOutline } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
@@ -82,13 +82,10 @@ export default class ContactCreatePage implements OnInit {
   }
 
   private registerIcons() {
-    addIcons({ personAddOutline, arrowForwardCircle,trashOutline });
+    addIcons({ personAddOutline, arrowForwardCircle });
   }
 
-  deleteContact(){
-    this.toastService.presentToastError('Eliminar contacto!');
 
-  }
   createContact() {
     if (this.contactForm.valid) {
       console.log(this.contactForm.value);

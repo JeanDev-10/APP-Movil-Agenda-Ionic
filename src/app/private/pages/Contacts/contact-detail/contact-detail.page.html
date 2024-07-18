@@ -89,7 +89,7 @@
         </ion-note>
       </ion-item>
 
-      <div class="flex_button_register">
+      <div class="flex_button_favorites">
         <ion-button
           (click)="toggleEditMode()"
           [fill]="'outline'"
@@ -108,6 +108,12 @@
         >
           <ion-icon name="close-circle-outline" slot="start"></ion-icon>
           Cancelar
+        </ion-button>
+
+      </div>
+      <div class="flex_button_favorites">
+        <ion-button (click)="deleteContact()" [fill]="'outline'" type="button" color="danger">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>Eliminar
         </ion-button>
       </div>
       <div class="flex_button_favorites">

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { addIcons } from 'ionicons';
-import { callOutline, starOutline } from 'ionicons/icons';
+import { call, callOutline, filter, star, starOutline } from 'ionicons/icons';
 import { ListContactComponent } from '../../components/list-contact/list-contact.component';
 import { Router, RouterModule } from '@angular/router';
 import { ListContactFavoriteComponent } from '../../components/list-contact-favorite/list-contact-favorite.component';
@@ -20,7 +20,8 @@ import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initia
 })
 export class HomePage implements OnInit {
   selectedSegment: string = 'contacts';
-
+  selectedFilter:string="Nombre"
+  filter:string="name"
 
   private router=inject(Router);
   constructor() {
@@ -34,6 +35,33 @@ export class HomePage implements OnInit {
   ngOnInit() {}
 
   private registerIcons() {
-    addIcons({ callOutline, starOutline });
+    addIcons({ callOutline, starOutline,star,call,filter });
   }
+  handleInputContacts(event:any,type:string){
+    const query = event.target.value.toLowerCase();
+    console.log(query)
+    if(this.selectedSegment=='contacts'){
+/**
+     * ?llamar a api pasamos filter a la petición
+     */
+    }else{
+/**
+     * ?llamar a api pasamos filter a la petición
+     */
+    }
+
+  }
+  handleChangeFilter(e:any){
+    this.filter=e.detail.value
+    if(this.filter=='name'){
+      this.selectedFilter="Nombre";
+    }
+    if(this.filter==='phone'){
+      this.selectedFilter="Telefono";
+    }
+    if(this.filter==='nickname'){
+      this.selectedFilter="Apodo";
+    }
+  }
+
 }
