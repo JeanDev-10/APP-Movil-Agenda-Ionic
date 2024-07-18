@@ -28,7 +28,12 @@ ion-item {
 form{
   width: 100%;
 }
-
+.container-avatar{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .breadcrumbs-left {
   display: flex;
   justify-content: flex-start;

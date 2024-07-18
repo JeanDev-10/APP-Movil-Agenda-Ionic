@@ -1,15 +1,16 @@
 
 
-ion-img{
+ion-avatar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 50%;
   margin: 0 auto;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-top: 2em;
+  margin-top: 5em;
 }
 
 ion-segment{
-  margin-top: 2em;
+  margin-top: 6em;
   padding: 1em;
 }
 ion-toggle{
@@ -28,3 +29,9 @@ ion-toggle{
   flex-direction: column;
   align-items: center;
 }
+
+
+
+
+
+

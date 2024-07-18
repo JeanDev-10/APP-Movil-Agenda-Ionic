@@ -9,13 +9,14 @@ import { callOutline, starOutline } from 'ionicons/icons';
 import { ListContactComponent } from '../../components/list-contact/list-contact.component';
 import { Router, RouterModule } from '@angular/router';
 import { ListContactFavoriteComponent } from '../../components/list-contact-favorite/list-contact-favorite.component';
+import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonicModule, NavbarComponent, CommonModule, FormsModule,ListContactComponent,ListContactFavoriteComponent,RouterModule],
+  imports: [IonicModule, NavbarComponent, CommonModule, FormsModule,ListContactComponent,ListContactFavoriteComponent,RouterModule,AvatarInitialsComponent],
 })
 export class HomePage implements OnInit {
   selectedSegment: string = 'contacts';

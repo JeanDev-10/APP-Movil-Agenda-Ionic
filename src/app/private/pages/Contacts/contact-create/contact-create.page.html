@@ -17,6 +17,9 @@
   </ion-header>
 
   <div class="container">
+    <div class="container-avatar">
+      <app-avatar-initials [firstName]="firstName" [lastName]="lastName" customClass="large" />
+    </div>
     <form [formGroup]="contactForm" (submit)="createContact()">
       <ion-item>
         <ion-label position="stacked">Nombre</ion-label>

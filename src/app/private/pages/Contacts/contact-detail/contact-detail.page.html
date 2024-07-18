@@ -16,10 +16,9 @@
     </ion-toolbar>
   </ion-header>
   <div class="container">
-    <ion-img
-      [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'"
-      alt="Foto de perfil"
-    />
+    <div class="container-avatar">
+      <app-avatar-initials [firstName]="firstName" [lastName]="lastName" customClass="large" />
+    </div>
     <form [formGroup]="contactForm" (submit)="createContact()">
       <ion-item>
         <ion-label position="stacked">Nombre</ion-label>

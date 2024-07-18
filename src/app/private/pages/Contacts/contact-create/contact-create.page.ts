@@ -7,18 +7,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { addIcons } from 'ionicons';
 import { arrowForwardCircle, personAddOutline } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { RouterModule } from '@angular/router';
+import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
+import { splitName } from 'src/app/core/helpers/AvatarNameContact';
 
 @Component({
   selector: 'app-contact-create',
@@ -30,17 +26,26 @@ import { RouterModule } from '@angular/router';
     NavbarComponent,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,RouterModule
+    ReactiveFormsModule,
+    RouterModule,
+    AvatarInitialsComponent,
   ],
 })
 export default class ContactCreatePage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private toastService = inject(ToastService);
-
+  firstName: string = '';
+  lastName: string = '';
   contactForm!: FormGroup;
+
   constructor() {
     this.registerForm();
     this.registerIcons();
+    this.contactForm.get('name')?.valueChanges.subscribe((data: string) => {
+      const { firstName, lastName } = splitName(data);
+      this.firstName = firstName;
+      this.lastName = lastName;
+    });
   }
 
   ngOnInit() {}
@@ -59,6 +64,7 @@ export default class ContactCreatePage implements OnInit {
       nickname: ['', [Validators.minLength(3), Validators.maxLength(50)]],
     });
   }
+
   get name() {
     return this.contactForm.get('name');
   }
@@ -70,9 +76,11 @@ export default class ContactCreatePage implements OnInit {
   get nickname() {
     return this.contactForm.get('nickname');
   }
+
   private registerIcons() {
-    addIcons({ personAddOutline,arrowForwardCircle });
+    addIcons({ personAddOutline, arrowForwardCircle });
   }
+
   createContact() {
     if (this.contactForm.valid) {
       console.log(this.contactForm.value);

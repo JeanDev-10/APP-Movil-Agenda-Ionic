@@ -1,0 +1,51 @@
+
+/* .avatar {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  color: --ion-color-primary-contrast;
+  font-weight: 600;
+
+} */
+
+/* .avatar {
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: --ion-color-primary-contrast;
+  font-weight: 600;
+
+} */
+
+
+
+.avatar {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 40px; /* Tamaño adecuado para la lista */
+  height: 40px; /* Tamaño adecuado para la lista */
+  font-weight: 600;
+  font-size: 16px; /* Tamaño de fuente adecuado */
+}
+
+.avatar.small {
+  width: 40px; /* Tamaño pequeño para listas */
+  height: 40px; /* Tamaño pequeño para listas */
+  font-size: 16px; /* Tamaño de fuente adecuado */
+}
+
+.avatar.large {
+  width: 100px; /* Tamaño grande para perfiles */
+  height: 100px; /* Tamaño grande para perfiles */
+  font-size: 36px; /* Tamaño de fuente adecuado */
+}
