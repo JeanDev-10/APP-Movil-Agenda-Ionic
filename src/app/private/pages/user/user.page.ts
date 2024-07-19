@@ -15,7 +15,6 @@ import { ToastService } from 'src/app/core/services/toast.service';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './components/edit-password/edit-password.component';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
-import { splitName } from 'src/app/core/helpers/AvatarNameContact';
 
 @Component({
   selector: 'app-user',
