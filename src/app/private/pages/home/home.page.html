@@ -17,24 +17,52 @@
       ></ion-icon>
     </ion-segment-button>
   </ion-segment>
+
+  <div class="flex_search_and_filter searchContact">
+    <ion-item>
+      <ion-text color="medium">
+        <p>Ordenar por:</p>
+      </ion-text>
+      <ion-select value="all" (ionChange)="handleChangeFilter($event)">
+        <ion-select-option value="all">Todos</ion-select-option>
+        <ion-select-option value="name">Nombre</ion-select-option>
+        <ion-select-option value="phone">Telefono</ion-select-option>
+        <ion-select-option value="nickname">Apodo</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+  <div class="flex_search_and_filter searchContact">
+    <ion-text color="medium">
+      <p>Buscar por:</p>
+    </ion-text>
+    <ion-chip
+      size="sm"
+      [outline]="true"
+      [color]="selectedSearch === 'Nombre' ? 'success' : 'default'"
+      (click)="onChipClick('Nombre')"
+      >Nombre</ion-chip
+    >
+    <ion-chip
+      size="sm"
+      [outline]="true"
+      [color]="selectedSearch === 'Apodo' ? 'success' : 'default'"
+      (click)="onChipClick('Apodo')"
+      >Apodo</ion-chip
+    >
+    <ion-chip
+      size="sm"
+      [outline]="true"
+      [color]="selectedSearch === 'Teléfono' ? 'success' : 'default'"
+      (click)="onChipClick('Teléfono')"
+      >Teléfono</ion-chip
+    >
+  </div>
   <div class="flex_search_and_filter">
     <ion-searchbar
       [debounce]="1000"
       (ionInput)="handleInputContacts($event,'contacts')"
     >
     </ion-searchbar>
-    <ion-item>
-      <ion-select [label]="selectedFilter" placeholder="Filtrar por" value="name"  (ionChange)="handleChangeFilter($event)">
-        <ion-icon
-          name="filter"
-          slot="end"
-          size="default"
-        ></ion-icon>
-        <ion-select-option value="name">Nombre</ion-select-option>
-        <ion-select-option value="phone">Telefono</ion-select-option>
-        <ion-select-option value="nickname">Apodo</ion-select-option>
-      </ion-select>
-    </ion-item>
   </div>
   @if(selectedSegment==='contacts'){
 

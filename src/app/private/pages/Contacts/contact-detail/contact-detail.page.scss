@@ -21,10 +21,11 @@ ion-img{
   padding: .2em 0;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .container-avatar{
-  margin-top: 8em;
+  margin-top: 4.5em;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -33,13 +34,7 @@ ion-img{
 ion-item {
   margin-bottom: 20px;
 }
-.container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100%;
-}
+
 form{
   width: 100%;
 }

@@ -19,7 +19,8 @@ import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initia
 })
 export class HomePage implements OnInit {
   selectedSegment: string = 'contacts';
-  selectedFilter:string="Nombre"
+  selectedFilter:string="Todos"
+  selectedSearch:string="Nombre"
   filter:string="name"
 
   private router=inject(Router);
@@ -27,7 +28,11 @@ export class HomePage implements OnInit {
     this.registerIcons();
   }
 
-
+  onChipClick(searchType: string) {
+    this.selectedSearch = searchType;
+    console.log(`Selected search type: ${searchType}`);
+    // Aquí se pueden agregar otras acciones que deban realizarse cuando cambia el chip seleccionado
+  }
   segmentChanged(event: any) {
     this.selectedSegment = event.detail.value;
   }
@@ -52,6 +57,9 @@ export class HomePage implements OnInit {
   }
   handleChangeFilter(e:any){
     this.filter=e.detail.value
+    if(this.filter=='all'){
+      this.selectedFilter="Todos";
+    }
     if(this.filter=='name'){
       this.selectedFilter="Nombre";
     }
