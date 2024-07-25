@@ -13,11 +13,12 @@ import {
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { tokenInterceptor } from './app/core/interceptor/auth-token';
-import { ErrorHandlerApi } from './app/core/interceptor/errorHandlerApi';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { ErrorApiInterceptorFn } from './app/core/interceptor/errorHandlerApi';
 import { provideLottieOptions } from 'ngx-lottie';
 import player from 'lottie-web';
+import { SpinnerInterceptor } from './app/core/interceptor/spinner.interceptor';
+import { authTokenInterceptor } from './app/core/interceptor/auth-token';
 
 if (environment.production) {
   enableProdMode();
@@ -30,9 +31,11 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptors([tokenInterceptor, ErrorHandlerApi])),
+    provideHttpClient(withInterceptors([ErrorApiInterceptorFn]),withInterceptorsFromDi()),
     provideLottieOptions({
       player: () => player,
     }),
+    {provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: authTokenInterceptor, multi: true},
   ],
 });
