@@ -19,10 +19,11 @@ import {
   personAddOutline,
 } from 'ionicons/icons';
 import { IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { passwordMatchValidator } from '../../../core/helpers/validators';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -45,6 +46,9 @@ export default class RegisterPage {
    */
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
+
   /**
    * ? CONFIGURACIÓN ANIMACIONES
    */
@@ -69,7 +73,6 @@ export default class RegisterPage {
   constructor() {
     this.registerIcons();
     this.registerRegisterForm();
-
   }
 
   SeePassword(text: string) {
@@ -85,6 +88,15 @@ export default class RegisterPage {
        * ! ENVIAR PETICIÓN HTTP
        *  */
       console.log(this.registerForm.value);
+      this._authService.register(this.registerForm.value).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.toastService.presentToastSucess(
+            '¡Credenciales creadas exitosamente!'
+          );
+          this._router.navigateByUrl('/auth/login');
+        },
+      });
     } else {
       /**
        * ! MOSTRAR TOAST DE FORMULARIO INVALIDO
@@ -99,7 +111,7 @@ export default class RegisterPage {
   getFormHasTouch(field: string): boolean | undefined {
     return this.registerForm.get(field)?.touched;
   }
-  private registerIcons(){
+  private registerIcons() {
     addIcons({
       eyeOffOutline,
       eyeOutline,
@@ -110,7 +122,7 @@ export default class RegisterPage {
       personAddOutline,
     });
   }
-  private registerRegisterForm(){
+  private registerRegisterForm() {
     this.registerForm = this.fb.group(
       {
         firstname: ['', [Validators.required, Validators.minLength(3)]],
