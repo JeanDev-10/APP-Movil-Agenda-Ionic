@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, Platform, IonText } from '@ionic/angular/standalone';
 import { LoadingComponent } from './core/components/loading/loading.component';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { SpinnerService } from './core/services/spinner.service';
@@ -8,7 +8,7 @@ import { SpinnerService } from './core/services/spinner.service';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   standalone: true,
-  imports: [IonApp, IonRouterOutlet, LoadingComponent],
+  imports: [IonText, IonApp, IonRouterOutlet, LoadingComponent],
 })
 export class AppComponent implements OnInit{
   constructor(
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit{
     this.initializeApp();
   }
   ngOnInit(): void {
-    this.router.events.subscribe(event => {
+     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.spinnerService.show();
       } else if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {

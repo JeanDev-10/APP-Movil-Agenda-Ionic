@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -39,7 +39,7 @@ import { AnimationOptions, LottieComponent } from 'ngx-lottie';
     LottieComponent,
   ],
 })
-export default class RegisterPage implements OnInit {
+export default class RegisterPage {
   /**
    * ?Inyectando servicios
    */
@@ -72,7 +72,6 @@ export default class RegisterPage implements OnInit {
 
   }
 
-  ngOnInit() {}
   SeePassword(text: string) {
     if (text == 'password') {
       this.IsPassword = !this.IsPassword;

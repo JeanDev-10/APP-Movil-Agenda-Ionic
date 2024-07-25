@@ -15,7 +15,6 @@
       </ion-breadcrumbs>
     </ion-toolbar>
   </ion-header>
-
   <div class="flex-register">
     <ng-lottie [options]="options" [styles]="styles"></ng-lottie>
 
@@ -30,6 +29,7 @@
           maxlength="50"
           type="email"
           placeholder="example@hotmail.com"
+          tabindex="1"
         ></ion-input>
         <ion-note color="danger">
           @if(getformHasError('email','required')&&getFormHasTouch('email')){
@@ -46,6 +46,7 @@
           fill="outline"
           [counter]="true"
           maxlength="10"
+          tabindex="2"
           [type]="IsPassword ? 'text' : 'password'"
           placeholder="**********"
         >

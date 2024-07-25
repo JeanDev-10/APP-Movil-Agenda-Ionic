@@ -4,7 +4,7 @@ import {
   eyeOutline,
   personAddOutline,
 } from 'ionicons/icons';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -17,8 +17,11 @@ import { IonicModule } from '@ionic/angular';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { addIcons } from 'ionicons';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import { AuthService } from '../../service/auth.service';
+import { LoginI } from '../../models/auth.model';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -35,12 +38,15 @@ import { AnimationOptions, LottieComponent } from 'ngx-lottie';
     LottieComponent,
   ],
 })
-export default class LoginPage implements OnInit {
+export default class LoginPage  {
   /**
    * ?Inyectando servicios
    */
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
+  private readonly _authService = inject(AuthService);
+  private readonly _localStorageService = inject(LocalStorageService);
+  private readonly _router = inject(Router);
 
   /**
    * ? CONFIGURACIÓN ANIMACIONES
@@ -66,7 +72,6 @@ export default class LoginPage implements OnInit {
     this.registerLoginForm();
   }
 
-  ngOnInit() {}
   SeePassword() {
     this.IsPassword = !this.IsPassword;
   }
@@ -76,6 +81,13 @@ export default class LoginPage implements OnInit {
        * ! ENVIAR PETICIÓN HTTP
        *  */
       console.log(this.loginForm.value);
+      this._authService.login(this.loginForm.value).subscribe({
+        next:(data)=>{
+          console.log(data)
+          this._localStorageService.setToken(data.data)
+          this._router.navigateByUrl('/dashboard');
+        },
+      })
     } else {
       /**
        * ! MOSTRAR TOAST DE FORMULARIO INVALIDO
