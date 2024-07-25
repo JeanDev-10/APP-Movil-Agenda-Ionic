@@ -15,6 +15,9 @@ import { ToastService } from 'src/app/core/services/toast.service';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './components/edit-password/edit-password.component';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
+import { UserService } from 'src/app/core/services/user.service';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -37,6 +40,11 @@ export default class UserPage implements OnInit {
   firstName:string="";
   lastName:string="";
   private toastService = inject(ToastService);
+  private _userService=inject(UserService);
+  private readonly _router = inject(Router);
+  private readonly _localStorageService = inject(LocalStorageService);
+
+
   darkMode: boolean = true;
   constructor() {
     this.registerIcons();
@@ -55,7 +63,16 @@ export default class UserPage implements OnInit {
     this.selectedSegment = event.detail.value;
   }
   logout() {
-    this.toastService.presentToastSucess('¡Sesión cerrada exitosa!');
+    this._userService.logout().subscribe({
+      next:(data)=>{
+        this._localStorageService.deleteToken();
+        this.toastService.presentToastSucess('¡Sesión cerrada exitosa!');
+        this._router.navigateByUrl('/auth/login')
+      },
+      error:(error)=>{
+        console.error(error)
+      }
+    })
   }
   registerIcons() {
     addIcons({ logOutOutline,sunny });
