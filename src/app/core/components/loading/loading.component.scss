@@ -1,0 +1,25 @@
+@keyframes gradientAnimation {
+  0% {
+    background-color: #ff7e00; /* Naranja brillante */
+  }
+  50% {
+    background-color: #ffae42; /* Naranja más claro */
+  }
+  100% {
+    background-color: #ff7e00; /* Naranja brillante */
+  }
+}
+.container {
+  height: 100vh;
+  display: grid;
+  place-content: center;
+  animation: gradientAnimation 2s ease-in-out infinite;
+}
+
+.moving-box {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+
