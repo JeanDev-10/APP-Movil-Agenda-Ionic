@@ -9,10 +9,15 @@ export class authTokenInterceptor implements HttpInterceptor {
 			const requestClone = req.clone({ url: this.cleanWhiteUrl(req.url) });
 			return next.handle(requestClone);
 		}
-
-		const headers = req.headers.set('Autorization', localStorage.getItem('token')!);
-		const authReq = req.clone({ headers });
-		return next.handle(authReq);
+    const token=localStorage.getItem('token');
+    let request = req;
+    request = req.clone({
+      setHeaders: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(request)
+		return next.handle(request);
 	}
 
 	private cleanWhiteUrl(url: string) {

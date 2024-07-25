@@ -1,3 +1,4 @@
+import { IonContent } from '@ionic/angular/standalone';
 import { Subject } from 'rxjs';
 import { SpinnerService } from './../../services/spinner.service';
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
@@ -9,9 +10,9 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
   standalone:true,
-  imports:[LottieComponent,AsyncPipe]
+  imports:[LottieComponent,AsyncPipe,IonContent]
 })
-export class LoadingComponent implements AfterViewInit {
+export class LoadingComponent {
   private readonly spinnerService = inject(SpinnerService);
   isLoading$!: Subject<boolean>;
   options: AnimationOptions = {
@@ -20,12 +21,10 @@ export class LoadingComponent implements AfterViewInit {
 
   styles = {
     width: '100%',
-    height: 'auto'
+    height: 'auto',
   };
   constructor(){
     this.isLoading$=this.spinnerService.isLoading$;
   }
-  ngAfterViewInit(): void {
-    this.isLoading$=this.spinnerService.isLoading$;
-  }
+
 }
