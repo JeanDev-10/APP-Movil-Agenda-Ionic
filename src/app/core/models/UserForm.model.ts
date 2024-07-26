@@ -7,3 +7,6 @@ export interface UserFormChangePasswordI{
     "new_password": string,
     "new_password_confirmation": string
 }
+export interface UserFormCheckPasswordI{
+    "password": string,
+}

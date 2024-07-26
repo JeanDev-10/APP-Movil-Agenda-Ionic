@@ -17,7 +17,7 @@ import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initia
   standalone: true,
   imports: [IonicModule, NavbarComponent, CommonModule, FormsModule,ListContactComponent,RouterModule,AvatarInitialsComponent],
 })
-export class HomePage implements OnInit {
+export class HomePage  {
   selectedSegment: string = 'contacts';
   selectedFilter:string="Todos"
   selectedSearch:string="Nombre"
@@ -36,7 +36,6 @@ export class HomePage implements OnInit {
   segmentChanged(event: any) {
     this.selectedSegment = event.detail.value;
   }
-  ngOnInit() {}
 
   private registerIcons() {
     addIcons({ callOutline, starOutline,star,call,filter });

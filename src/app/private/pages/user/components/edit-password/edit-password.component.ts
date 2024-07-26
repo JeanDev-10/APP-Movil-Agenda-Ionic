@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +16,13 @@ import {
   eyeOffOutline,
   eyeOutline,
 } from 'ionicons/icons';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  EMPTY,
+  switchMap,
+} from 'rxjs';
 import { passwordMatchValidatorProfile } from 'src/app/core/helpers/validators-new-password';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -34,12 +42,43 @@ export class EditPasswordComponent {
   private fb = inject(FormBuilder);
   private _userService = inject(UserService);
   PasswordForm!: FormGroup;
-
+  passwordCheck: boolean = false;
   constructor() {
     this.registerPasswordForm();
     this.registerIcons();
+    this.fieldPasswordCheckPassword()
   }
+  private fieldPasswordCheckPassword(){
+    this.PasswordForm.get('password')
+    ?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap((password: string) =>
+      {
+        if(password?.length==0) return EMPTY
+        return this._userService.checkPassword({ password }).pipe(
+          catchError((error) => {
+            if (error.status === 401) {
+              this.passwordCheck = false;
+            }
+            return EMPTY;
+          })
+        )
+      }
 
+      ),
+      takeUntilDestroyed()
+    )
+    .subscribe({
+      next: (response) => {
+        console.log(response);
+        this.passwordCheck = true;
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
   private registerIcons() {
     addIcons({
       personOutline,
@@ -103,18 +142,25 @@ export class EditPasswordComponent {
     }
   }
   onSubmitPassword() {
-    if (this.PasswordForm.valid) {
+    if (this.PasswordForm.valid && this.passwordCheck) {
       /**
        * ! ENVIAR PETICIÓN HTTP
        *  */
       console.log(this.PasswordForm.value);
       this._userService.changePassword(this.PasswordForm.value).subscribe({
         next: () => {
-          this.toastService.presentToastSucess('¡Cambio de contraseña exitoso!');
-          this.PasswordForm.reset();
+          this.toastService.presentToastSucess(
+            '¡Cambio de contraseña exitoso!'
+          );
+          this.passwordCheck = false;
+          this.PasswordForm.reset({
+            password:'',
+            new_password:'',
+            new_password_confirmation:''
+          });
         },
         error: (error) => {
-          console.error(error)
+          console.error(error);
         },
       });
     } else {

@@ -1,7 +1,8 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { SpinnerService } from '../services/spinner.service';
-import { finalize, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { SpinnerService } from '../services/spinner.service';
 
 @Injectable()
 export class SpinnerInterceptor implements HttpInterceptor {
@@ -12,11 +13,29 @@ export class SpinnerInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    console.log("se ejecuta spinner")
-    this.spinnerService.show();
+    let cleanRequest = request;
+
+    if (request.url.includes('progressbar_spinner_')) {
+      this.spinnerService.showSpecial();
+      cleanRequest = this.cleanRequestUrl(request);
+    } else {
+      this.spinnerService.show();
+    }
+    console.log("se ejecuta spinner");
 
     return next
-      .handle(request)
-      .pipe(finalize(() => this.spinnerService.hide()));
+      .handle(cleanRequest)
+      .pipe(finalize(() => {
+        if (request.url.includes('progressbar_spinner_')) {
+          this.spinnerService.hideSpecial();
+        } else {
+          this.spinnerService.hide();
+        }
+      }));
+  }
+
+  private cleanRequestUrl(request: HttpRequest<unknown>): HttpRequest<unknown> {
+    const cleanUrl = request.url.replace('progressbar_spinner_', '');
+    return request.clone({ url: cleanUrl });
   }
 }
