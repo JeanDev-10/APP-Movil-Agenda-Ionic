@@ -1,25 +1,38 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { personOutline, mail, logOutOutline, eyeOffOutline, eyeOutline } from 'ionicons/icons';
+import {
+  personOutline,
+  mail,
+  logOutOutline,
+  eyeOffOutline,
+  eyeOutline,
+} from 'ionicons/icons';
 import { passwordMatchValidatorProfile } from 'src/app/core/helpers/validators-new-password';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-edit-password',
-  standalone:true,
-  imports:[CommonModule,IonicModule,ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, IonicModule, ReactiveFormsModule],
   templateUrl: './edit-password.component.html',
   styleUrls: ['./edit-password.component.scss'],
 })
-export class EditPasswordComponent  implements OnInit {
+export class EditPasswordComponent {
   IsNewPassword: boolean = false;
   IsPassword: boolean = false;
   IsConfirmationPassword: boolean = false;
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
+  private _userService = inject(UserService);
   PasswordForm!: FormGroup;
 
   constructor() {
@@ -27,22 +40,23 @@ export class EditPasswordComponent  implements OnInit {
     this.registerIcons();
   }
 
-  ngOnInit() {}
-
-
   private registerIcons() {
     addIcons({
       personOutline,
       mail,
       logOutOutline,
       eyeOffOutline,
-      eyeOutline
+      eyeOutline,
     });
   }
-  getformHasError(form:FormGroup,field: string, rule: string): boolean | undefined {
+  getformHasError(
+    form: FormGroup,
+    field: string,
+    rule: string
+  ): boolean | undefined {
     return form.get(field)?.hasError(rule);
   }
-  getFormHasTouch(form:FormGroup,field: string): boolean | undefined {
+  getFormHasTouch(form: FormGroup, field: string): boolean | undefined {
     return form.get(field)?.touched;
   }
 
@@ -65,7 +79,7 @@ export class EditPasswordComponent  implements OnInit {
             Validators.maxLength(10),
           ],
         ],
-        confirmPassword: [
+        new_password_confirmation: [
           '',
           [
             Validators.required,
@@ -88,12 +102,21 @@ export class EditPasswordComponent  implements OnInit {
       this.IsConfirmationPassword = !this.IsConfirmationPassword;
     }
   }
-  onSubmitPassword(){
+  onSubmitPassword() {
     if (this.PasswordForm.valid) {
       /**
        * ! ENVIAR PETICIÓN HTTP
        *  */
       console.log(this.PasswordForm.value);
+      this._userService.changePassword(this.PasswordForm.value).subscribe({
+        next: () => {
+          this.toastService.presentToastSucess('¡Cambio de contraseña exitoso!');
+          this.PasswordForm.reset();
+        },
+        error: (error) => {
+          console.error(error)
+        },
+      });
     } else {
       /**
        * ! MOSTRAR TOAST DE FORMULARIO INVALIDO

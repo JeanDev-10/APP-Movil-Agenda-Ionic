@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { LogoutI, ProfileI } from 'src/app/auth/models/auth.model';
 import { environment } from 'src/environments/environment';
 import { UserEditProfileI } from '../models/User.model';
-import { UserFormEditProfileI } from '../models/UserForm.model';
+import { UserFormChangePasswordI, UserFormEditProfileI } from '../models/UserForm.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,5 +19,8 @@ export class UserService {
   }
   editProfile(body: UserFormEditProfileI) {
     return this._http.put<UserEditProfileI>(`${this.api_url}/editProfile`, body);
+  }
+  changePassword(body:UserFormChangePasswordI){
+    return this._http.post<UserEditProfileI>(`${this.api_url}/changePassword`, body);
   }
 }

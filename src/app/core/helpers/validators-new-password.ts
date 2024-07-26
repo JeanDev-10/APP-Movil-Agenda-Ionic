@@ -4,7 +4,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 */
 export const passwordMatchValidatorProfile: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get('new_password');
-  const confirmPassword = control.get('confirmPassword');
+  const new_password_confirmation = control.get('new_password_confirmation');
 
-  return password && confirmPassword && password.value !== confirmPassword.value ? { passwordMismatch: true } : null;
+  return password && new_password_confirmation && password.value !== new_password_confirmation.value ? { passwordMismatch: true } : null;
 };
