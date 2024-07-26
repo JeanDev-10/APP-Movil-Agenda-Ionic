@@ -18,11 +18,6 @@ export class AuthService {
   register(body:RegisterFormI){
     return this._http.post<RegisterI>(`${this.api_url}/register`,body)
   }
-  profile(){
-    return this._http.get<ProfileI>(`${this.api_url}/profile`)
-  }
-  logout(){
-    return this._http.post<LogoutI>(`${this.api_url}/logout`,{})
-  }
+
 
 }

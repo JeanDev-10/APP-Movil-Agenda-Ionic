@@ -123,6 +123,8 @@ export default class ContactDetailPage implements OnInit {
     }
   }
   addFavorites() {
+    const audio = new Audio('assets/sounds/water-droplet.mp3');
+    audio.play();
     if (this.isContactFavorite) {
       this.isContactFavorite=false;
       this.toastService.presentToastSucess('quitar de favoritos');

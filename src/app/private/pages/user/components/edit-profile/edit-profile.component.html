@@ -3,25 +3,27 @@
   <ion-item>
     <ion-label position="stacked">Nombres</ion-label>
     <ion-input
-      formControlName="firstname"
+      formControlName="firstName"
       fill="outline"
       [clearInput]="true"
       [counter]="true"
       maxlength="30"
       placeholder="Jean Pierre"
     ></ion-input>
-    <ion-note color="danger">
-      @if(getformHasError(registerForm,'firstname','required')&&getFormHasTouch(registerForm,'firstname')){
-      Nombres es requerido }
-      @if(getformHasError(registerForm,'firstname','minlength')&&getFormHasTouch(registerForm,'firstname')){
-      Nombres debe tener al menos 3 caracteres. }
-    </ion-note>
+    @if(getformHasError(registerForm,'firstName','required')&&getFormHasTouch(registerForm,'firstName')){
+    <ion-note color="danger"> Nombres es requerido </ion-note>
+    }
+    @if(getformHasError(registerForm,'firstName','minlength')&&getFormHasTouch(registerForm,'firstName')){
+    <ion-note color="danger"
+      >Nombres debe tener al menos 3 caracteres.</ion-note
+    >
+    }
   </ion-item>
 
   <ion-item>
     <ion-label position="stacked">Apellidos</ion-label>
     <ion-input
-      formControlName="lastname"
+      formControlName="lastName"
       fill="outline"
       [clearInput]="true"
       [counter]="true"
@@ -29,12 +31,14 @@
       placeholder="Rodríguez"
     ></ion-input>
 
+    @if(getformHasError(registerForm,'lastName','required')&&getFormHasTouch(registerForm,'lastName')){
+    <ion-note color="danger"> Apellidos es requerido </ion-note>
+    }
+    @if(getformHasError(registerForm,'lastName','minlength')&&getFormHasTouch(registerForm,'lastName')){
     <ion-note color="danger">
-      @if(getformHasError(registerForm,'lastname','required')&&getFormHasTouch(registerForm,'lastname')){
-      Apellidos es requerido }
-      @if(getformHasError(registerForm,'lastname','minlength')&&getFormHasTouch(registerForm,'lastname')){
-      Apellidos debe tener al menos 3 caracteres. }
+      Apellidos debe tener al menos 3 caracteres.
     </ion-note>
+    }
   </ion-item>
   <div class="flex_button_register">
     <ion-button

@@ -1,4 +1,4 @@
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent, IonProgressBar } from '@ionic/angular/standalone';
 import { Subject } from 'rxjs';
 import { SpinnerService } from './../../services/spinner.service';
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
@@ -9,8 +9,8 @@ import { AsyncPipe } from '@angular/common';
   selector: 'app-loading',
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
-  standalone:true,
-  imports:[LottieComponent,AsyncPipe,IonContent]
+  standalone: true,
+  imports: [LottieComponent, AsyncPipe, IonContent, IonProgressBar],
 })
 export class LoadingComponent {
   private readonly spinnerService = inject(SpinnerService);
@@ -23,8 +23,7 @@ export class LoadingComponent {
     width: '100%',
     height: 'auto',
   };
-  constructor(){
-    this.isLoading$=this.spinnerService.isLoading$;
+  constructor() {
+    this.isLoading$ = this.spinnerService.isLoading$;
   }
-
 }
