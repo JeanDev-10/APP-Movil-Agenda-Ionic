@@ -10,12 +10,14 @@
       maxlength="30"
       placeholder="Jean Pierre"
     ></ion-input>
-    <ion-note color="danger">
-      @if(getformHasError(registerForm,'firstName','required')&&getFormHasTouch(registerForm,'firstName')){
-      Nombres es requerido }
-      @if(getformHasError(registerForm,'firstName','minlength')&&getFormHasTouch(registerForm,'firstName')){
-      Nombres debe tener al menos 3 caracteres. }
-    </ion-note>
+    @if(getformHasError(registerForm,'firstName','required')&&getFormHasTouch(registerForm,'firstName')){
+    <ion-note color="danger"> Nombres es requerido </ion-note>
+    }
+    @if(getformHasError(registerForm,'firstName','minlength')&&getFormHasTouch(registerForm,'firstName')){
+    <ion-note color="danger"
+      >Nombres debe tener al menos 3 caracteres.</ion-note
+    >
+    }
   </ion-item>
 
   <ion-item>
@@ -29,12 +31,14 @@
       placeholder="Rodríguez"
     ></ion-input>
 
+    @if(getformHasError(registerForm,'lastName','required')&&getFormHasTouch(registerForm,'lastName')){
+    <ion-note color="danger"> Apellidos es requerido </ion-note>
+    }
+    @if(getformHasError(registerForm,'lastName','minlength')&&getFormHasTouch(registerForm,'lastName')){
     <ion-note color="danger">
-      @if(getformHasError(registerForm,'lastName','required')&&getFormHasTouch(registerForm,'lastName')){
-      Apellidos es requerido }
-      @if(getformHasError(registerForm,'lastName','minlength')&&getFormHasTouch(registerForm,'lastName')){
-      Apellidos debe tener al menos 3 caracteres. }
+      Apellidos debe tener al menos 3 caracteres.
     </ion-note>
+    }
   </ion-item>
   <div class="flex_button_register">
     <ion-button

@@ -38,13 +38,17 @@
         ></ion-input>
 
         @if(name?.invalid && (name?.dirty || name?.touched)){
+        @if(name?.hasError('required')){
+        <ion-note color="danger"> Nombre es requerido. </ion-note>
+        } @if(name?.hasError('minlength')) {
+        <ion-note color="danger"> Debe tener mínimo 3 caracteres. </ion-note>
+
+        } @if(name?.hasError('maxlength')) {
         <ion-note color="danger">
-          @if(name?.hasError('required')){ Nombre es requerido. }
-          @if(name?.hasError('minlength')) { Debe tener mínimo 3 caracteres. }
-          @if(name?.hasError('maxlength')) { Como máximo se permiten 50
-          caracteres. }
+          Como máximo se permiten 50 caracteres.
         </ion-note>
-        }
+
+        } }
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Telefono</ion-label>
@@ -59,14 +63,20 @@
           placeholder="0987654320"
         ></ion-input>
         @if(phone?.invalid && (phone?.dirty || phone?.touched)){
+        @if(phone?.hasError('required')){
+        <ion-note color="danger"> Telefono es requerido. </ion-note>
+        } @if(phone?.hasError('minlength')) {
+        <ion-note color="danger"> Debe tener mínimo 10 caracteres. </ion-note>
+        } @if(phone?.hasError('maxlength')) {
         <ion-note color="danger">
-          @if(phone?.hasError('required')){ Telefono es requerido. }
-          @if(phone?.hasError('minlength')) { Debe tener mínimo 10 caracteres. }
-          @if(phone?.hasError('maxlength')) { Como máximo se permiten 10
-          caracteres. } @if(phone?.hasError('pattern')) { Solo se permiten
-          caracteres del 0-9. }
+          Como máximo se permiten 10 caracteres.
         </ion-note>
-        }
+
+        } @if(phone?.hasError('pattern')) {
+        <ion-note color="danger">
+          Solo se permiten caracteres del 0-9.
+        </ion-note>
+        } }
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Apodo (opcional)</ion-label>
@@ -79,15 +89,15 @@
           type="text"
           placeholder="JP"
         ></ion-input>
+        @if(nickname?.invalid && (nickname?.dirty || nickname?.touched)){
+        @if(nickname?.hasError('minlength')) {
+        <ion-note color="danger"> Debe tener mínimo 10 caracteres. </ion-note>
+        } @if(nickname?.hasError('maxlength')) {
         <ion-note color="danger">
-          @if(nickname?.invalid && (nickname?.dirty || nickname?.touched)){
-          <ion-note color="danger">
-            @if(nickname?.hasError('minlength')) { Debe tener mínimo 10
-            caracteres. } @if(nickname?.hasError('maxlength')) { Como máximo se
-            permiten 10 caracteres. }
-          </ion-note>
-          }
+          Como máximo se permiten 10 caracteres.
         </ion-note>
+
+        } }
       </ion-item>
 
       <div class="flex_button_register">
@@ -99,7 +109,6 @@
           <ion-icon slot="start" name="person-add-outline"></ion-icon>
           Crear Contacto
         </ion-button>
-
       </div>
     </form>
   </div>
