@@ -23,9 +23,10 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Data } from 'src/app/core/models/Contacts/ContactShow.model';
 
 @Component({
   selector: 'app-contact-detail',
@@ -43,9 +44,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   ],
 })
 export default class ContactDetailPage implements OnInit {
-  @Input({required:true}) id!:string;
   private readonly fb = inject(FormBuilder);
   private toastService = inject(ToastService);
+  private readonly _activatedRoute = inject(ActivatedRoute);
+  contact!:Data;
   isEditMode = false;
   isContactFavorite = false;
   firstName: string = '';
@@ -64,11 +66,13 @@ export default class ContactDetailPage implements OnInit {
   }
 
   ngOnInit() {
-    // Simulación de la carga de datos originales
+    console.log('Datos enviados por Data property ==> ', this._activatedRoute.snapshot.data);
+    this.contact=this._activatedRoute.snapshot.data['contact'].data;
+    this.isContactFavorite=this.contact.favoritos?.id?true:false;
     const initialData = {
-      name: 'Jean Rodriguez',
-      phone: '0963150796',
-      nickname: 'JP'
+      name: this.contact.name,
+      phone: this.contact.phone,
+      nickname: this.contact.nickname
     };
     this.setAvatarProfile(initialData.name)
     this.contactForm.patchValue(initialData);
