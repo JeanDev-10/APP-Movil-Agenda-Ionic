@@ -9,6 +9,9 @@ import { call, callOutline, filter, star, starOutline } from 'ionicons/icons';
 import { ListContactComponent } from '../../components/list-contact/list-contact.component';
 import { Router, RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
+import { map, Observable } from 'rxjs';
+import { ContactGetI } from 'src/app/core/models/Contacts/Contact.model';
+import { ContactService } from 'src/app/core/services/contact.service';
 
 @Component({
   selector: 'app-home',
@@ -22,10 +25,12 @@ export class HomePage  {
   selectedFilter:string="Todos"
   selectedSearch:string="Nombre"
   filter:string="name"
-
+  contacts$:Observable<ContactGetI>=new Observable<ContactGetI>
+  private readonly _contactService=inject(ContactService);
   private router=inject(Router);
   constructor() {
     this.registerIcons();
+    this.contacts$=this._contactService.getContacts();
   }
 
   onChipClick(searchType: string) {

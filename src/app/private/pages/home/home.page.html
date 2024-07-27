@@ -75,16 +75,14 @@
   }
 
   <ion-list>
-    @if(selectedSegment==='contacts'){
+    @if(selectedSegment==='contacts'){ @if(contacts$|async; as contacts){
+    @for(item of contacts.data.data; track item.id) {
+    <app-list-contact [contact]="item" />} } }
+    @if(selectedSegment==='favorites'){
 
+    <!-- <app-list-contact />
     <app-list-contact />
-    <app-list-contact />
-    <app-list-contact />
-    } @if(selectedSegment==='favorites'){
-
-    <app-list-contact />
-    <app-list-contact />
-    <app-list-contact />
+    <app-list-contact /> -->
 
     }
   </ion-list>

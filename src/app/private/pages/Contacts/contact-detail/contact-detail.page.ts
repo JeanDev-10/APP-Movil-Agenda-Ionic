@@ -1,6 +1,6 @@
 import { debounceTime } from 'rxjs';
 import { splitName } from './../../../../core/helpers/AvatarNameContact';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -43,6 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   ],
 })
 export default class ContactDetailPage implements OnInit {
+  @Input({required:true}) id!:string;
   private readonly fb = inject(FormBuilder);
   private toastService = inject(ToastService);
   isEditMode = false;
