@@ -23,10 +23,11 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Data } from 'src/app/core/models/Contacts/ContactShow.model';
+import { ContactService } from 'src/app/core/services/contact.service';
 
 @Component({
   selector: 'app-contact-detail',
@@ -47,6 +48,10 @@ export default class ContactDetailPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private toastService = inject(ToastService);
   private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _contactService = inject(ContactService);
+  private readonly _toastService= inject(ToastService);
+  private _router=inject(Router);
+
   contact!:Data;
   isEditMode = false;
   isContactFavorite = false;
@@ -116,7 +121,15 @@ export default class ContactDetailPage implements OnInit {
     });
   }
   deleteContact(){
-    this.toastService.presentToastError('Eliminar contacto!');
+    this._contactService.delete(this.contact.id).subscribe({
+      next:()=>{
+        this._toastService.presentToastSucess("¡Contacto eliminado correctamente!")
+        this._router.navigate(['/dashboard/contacts']);
+      },
+      error:(error)=>{
+        console.error(error);
+      }
+    });
 
   }
   toggleEditMode() {

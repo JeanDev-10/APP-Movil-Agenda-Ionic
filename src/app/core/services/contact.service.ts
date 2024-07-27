@@ -21,4 +21,7 @@ export class ContactService {
   getContactById(id:string|null) {
     return this._http.get<ContactShowI>(`${this.api_url}/${id}`);
   }
+  delete(id:string){
+    return this._http.delete<ResponseCommon>(`${this.api_url}/${id}`);
+  }
 }
