@@ -1,3 +1,4 @@
+import { Contact } from './../../../../core/models/Favorites/Favorites.model';
 import { debounceTime } from 'rxjs';
 import { splitName } from './../../../../core/helpers/AvatarNameContact';
 import { Component, Input, OnInit, inject } from '@angular/core';
@@ -28,6 +29,7 @@ import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initia
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Data } from 'src/app/core/models/Contacts/ContactShow.model';
 import { ContactService } from 'src/app/core/services/contact.service';
+import { FavoriteService } from 'src/app/core/services/favorite.service';
 
 @Component({
   selector: 'app-contact-detail',
@@ -49,6 +51,7 @@ export default class ContactDetailPage implements OnInit {
   private toastService = inject(ToastService);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _contactService = inject(ContactService);
+  private readonly _favoriteService = inject(FavoriteService);
   private readonly _toastService= inject(ToastService);
   private _router=inject(Router);
 
@@ -144,11 +147,25 @@ export default class ContactDetailPage implements OnInit {
     const audio = new Audio('assets/sounds/water-droplet.mp3');
     audio.play();
     if (this.isContactFavorite) {
-      this.isContactFavorite=false;
-      this.toastService.presentToastSucess('quitar de favoritos');
+      this._favoriteService.deleteFavorites(this.contact.favoritos?.id).subscribe({
+        next:()=>{
+          this.isContactFavorite=false
+          this.toastService.presentToastSucess("¡Eliminado de favoritos correctamente!")
+        },
+        error:(error)=>{
+          console.error(error)
+        }
+      })
     } else {
-      this.isContactFavorite=true;
-      this.toastService.presentToastSucess('agregar a favoritos');
+      this._favoriteService.addFavorites({'contact_id':this.contact.id}).subscribe({
+        next:()=>{
+          this.isContactFavorite=true;
+          this.toastService.presentToastSucess("Contacto agregado a favoritos correctamente!")
+        },
+        error:(error)=>{
+          console.error(error)
+        }
+      })
     }
   }
   cancelEdit() {
