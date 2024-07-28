@@ -1,6 +1,7 @@
+import { Contact } from './../../../../core/models/Favorites/Favorites.model';
 import { debounceTime } from 'rxjs';
 import { splitName } from './../../../../core/helpers/AvatarNameContact';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -23,9 +24,12 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Data } from 'src/app/core/models/Contacts/ContactShow.model';
+import { ContactService } from 'src/app/core/services/contact.service';
+import { FavoriteService } from 'src/app/core/services/favorite.service';
 
 @Component({
   selector: 'app-contact-detail',
@@ -45,6 +49,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export default class ContactDetailPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private toastService = inject(ToastService);
+  private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _contactService = inject(ContactService);
+  private readonly _favoriteService = inject(FavoriteService);
+  private readonly _toastService= inject(ToastService);
+  private _router=inject(Router);
+
+  contact!:Data;
   isEditMode = false;
   isContactFavorite = false;
   firstName: string = '';
@@ -63,11 +74,13 @@ export default class ContactDetailPage implements OnInit {
   }
 
   ngOnInit() {
-    // Simulación de la carga de datos originales
+    console.log('Datos enviados por Data property ==> ', this._activatedRoute.snapshot.data);
+    this.contact=this._activatedRoute.snapshot.data['contact'].data;
+    this.isContactFavorite=this.contact.favoritos?.id?true:false;
     const initialData = {
-      name: 'Jean Rodriguez',
-      phone: '0963150796',
-      nickname: 'JP'
+      name: this.contact.name,
+      phone: this.contact.phone,
+      nickname: this.contact.nickname
     };
     this.setAvatarProfile(initialData.name)
     this.contactForm.patchValue(initialData);
@@ -111,7 +124,15 @@ export default class ContactDetailPage implements OnInit {
     });
   }
   deleteContact(){
-    this.toastService.presentToastError('Eliminar contacto!');
+    this._contactService.delete(this.contact.id).subscribe({
+      next:()=>{
+        this._toastService.presentToastSucess("¡Contacto eliminado correctamente!")
+        this._router.navigate(['/dashboard/contacts']);
+      },
+      error:(error)=>{
+        console.error(error);
+      }
+    });
 
   }
   toggleEditMode() {
@@ -126,11 +147,25 @@ export default class ContactDetailPage implements OnInit {
     const audio = new Audio('assets/sounds/water-droplet.mp3');
     audio.play();
     if (this.isContactFavorite) {
-      this.isContactFavorite=false;
-      this.toastService.presentToastSucess('quitar de favoritos');
+      this._favoriteService.deleteFavorites(this.contact.favoritos?.id).subscribe({
+        next:()=>{
+          this.isContactFavorite=false
+          this.toastService.presentToastSucess("¡Eliminado de favoritos correctamente!")
+        },
+        error:(error)=>{
+          console.error(error)
+        }
+      })
     } else {
-      this.isContactFavorite=true;
-      this.toastService.presentToastSucess('agregar a favoritos');
+      this._favoriteService.addFavorites({'contact_id':this.contact.id}).subscribe({
+        next:()=>{
+          this.isContactFavorite=true;
+          this.toastService.presentToastSucess("Contacto agregado a favoritos correctamente!")
+        },
+        error:(error)=>{
+          console.error(error)
+        }
+      })
     }
   }
   cancelEdit() {

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ContactDetailResolver } from 'src/app/core/resolver/Contacts/ContactDetailResolver.resolver';
 
 export default[
   {
@@ -16,6 +17,9 @@ export default[
   },
   {
     path: ':id',
+    resolve:{
+      contact:ContactDetailResolver
+    },
     title: 'Detalle de Contacto',
     loadComponent: () =>
       import('./contact-detail/contact-detail.page')

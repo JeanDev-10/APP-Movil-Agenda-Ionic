@@ -12,11 +12,12 @@ import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.compone
 import { addIcons } from 'ionicons';
 import { arrowForwardCircle, personAddOutline } from 'ionicons/icons';
 import { ToastService } from 'src/app/core/services/toast.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
 import { splitName } from 'src/app/core/helpers/AvatarNameContact';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ContactService } from 'src/app/core/services/contact.service';
 @Component({
   selector: 'app-contact-create',
   templateUrl: './contact-create.page.html',
@@ -32,9 +33,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     AvatarInitialsComponent,
   ],
 })
-export default class ContactCreatePage implements OnInit {
+export default class ContactCreatePage{
   private readonly fb = inject(FormBuilder);
   private toastService = inject(ToastService);
+  private _contactService=inject(ContactService);
+  private _router=inject(Router);
   firstName: string = '';
   lastName: string = '';
   contactForm!: FormGroup;
@@ -52,7 +55,6 @@ export default class ContactCreatePage implements OnInit {
     });
   }
 
-  ngOnInit() {}
 
   private registerForm() {
     this.contactForm = this.fb.group({
@@ -88,6 +90,15 @@ export default class ContactCreatePage implements OnInit {
 
   createContact() {
     if (this.contactForm.valid) {
+      this._contactService.create(this.contactForm.value).subscribe({
+        next:()=>{
+            this.toastService.presentToastSucess('¡Contacto creado exitosamente!')
+            this._router.navigateByUrl('/dashboard/contacts');
+        },
+        error:(error)=>{
+          console.log(error);
+        }
+      })
       console.log(this.contactForm.value);
     } else {
       this.toastService.presentToastError('¡Formulario invalido!');
