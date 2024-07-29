@@ -17,12 +17,13 @@
       ></ion-icon>
     </ion-segment-button>
   </ion-segment>
-
   <div class="flex_search_and_filter searchContact">
+    <ion-searchbar
+      [debounce]="1000"
+      (ionInput)="handleInputContacts($event,'contacts')"
+    >
+    </ion-searchbar>
     <ion-item>
-      <ion-text color="medium">
-        <p>Ordenar por:</p>
-      </ion-text>
       <ion-select value="all" (ionChange)="handleChangeFilter($event)">
         <ion-select-option value="all">Todos</ion-select-option>
         <ion-select-option value="name">Nombre</ion-select-option>
@@ -31,10 +32,7 @@
       </ion-select>
     </ion-item>
   </div>
-  <div class="flex_search_and_filter searchContact">
-    <ion-text color="medium">
-      <p>Buscar por:</p>
-    </ion-text>
+  <div class="flex_filter">
     <ion-chip
       size="sm"
       [outline]="true"
@@ -57,13 +55,7 @@
       >Teléfono</ion-chip
     >
   </div>
-  <div class="flex_search_and_filter">
-    <ion-searchbar
-      [debounce]="1000"
-      (ionInput)="handleInputContacts($event,'contacts')"
-    >
-    </ion-searchbar>
-  </div>
+
   @if(selectedSegment==='contacts'){
 
   <ion-item class="crear-contacto" routerLink="/dashboard/contacts/create">
