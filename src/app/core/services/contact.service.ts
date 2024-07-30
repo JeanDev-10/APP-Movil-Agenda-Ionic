@@ -24,4 +24,7 @@ export class ContactService {
   delete(id:string){
     return this._http.delete<ResponseCommon>(`${this.api_url}/${id}`);
   }
+  editContact(id:string,body:ContactFormCreate){
+    return this._http.put<ResponseCommon>(`${this.api_url}/${id}`,body);
+  }
 }

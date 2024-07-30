@@ -150,7 +150,7 @@ export default class ContactDetailPage implements OnInit {
     if (this.isEditMode) {
       this.contactForm.enable();
     } else {
-      this.createContact();
+      this.editContact();
     }
   }
   addFavorites() {
@@ -198,11 +198,23 @@ export default class ContactDetailPage implements OnInit {
     this.contactForm.disable();
     this.contactForm.reset(this.backUpForm);
   }
-  createContact() {
+  editContact() {
     if (this.contactForm.valid) {
-      console.log(this.contactForm.value);
-      this.toastService.presentToastSucess('¡Formulario valido!');
-      this.contactForm.disable();
+      this._contactService
+        .editContact(this.contact.id, this.contactForm.value)
+        .subscribe({
+          next: () => {
+            this.toastService.presentToastSucess(
+              '¡Contacto editado exitosamente!'
+            );
+            this._eventEmissorService.setEvent({event:eventsType.UPDATE_CONTACTS})
+            this.backUpForm=this.contactForm.value;
+            this.contactForm.disable();
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
     } else {
       this.toastService.presentToastError('¡Formulario invalido!');
       this.isEditMode = !this.isEditMode;
