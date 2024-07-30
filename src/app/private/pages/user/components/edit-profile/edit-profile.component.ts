@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,10 +17,11 @@ import {
   pencilOutline,
   closeCircleOutline,
 } from 'ionicons/icons';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from 'src/app/core/services/user.service';
+import { Data } from 'src/app/auth/models/auth.model';
 
 @Component({
   selector: 'app-edit-profile',
@@ -29,13 +30,14 @@ import { UserService } from 'src/app/core/services/user.service';
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss'],
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent {
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
   private _userService = inject(UserService);
   registerForm!: FormGroup;
   isEditing: boolean = false;
   backUpForm: any;
+  userInformation!: Data;
   @Output() avatarName = new EventEmitter<{
     firstName: string;
     lastName: string;
@@ -43,6 +45,7 @@ export class EditProfileComponent implements OnInit {
   constructor() {
     this.registerRegisterForm();
     this.registerIcons();
+    this.getUserInformationApi();
     this.registerForm.valueChanges
       .pipe(
         debounceTime(300),
@@ -59,15 +62,11 @@ export class EditProfileComponent implements OnInit {
         });
       });
   }
-
-  ngOnInit() {
-    // Simulación de la carga de datos originales
-    const initialData = {
-      firstName: 'Jean',
-      lastName: 'Rodríguez',
-    };
-    this.registerForm.patchValue(initialData);
-    this.backUpForm = { ...initialData }; // Guardar una copia de los datos originales
+  get firstName() {
+    return this.registerForm.get('firstName');
+  }
+  get lastName() {
+    return this.registerForm.get('lastName');
   }
   onSubmit() {
     if (this.registerForm.valid) {
@@ -76,6 +75,10 @@ export class EditProfileComponent implements OnInit {
       this._userService.editProfile(this.registerForm.value).subscribe({
         next: () => {
           this.toastService.presentToastSucess('¡Perfil actualizado!');
+          this.setInformationProfile({
+            firstname: this.firstName?.value,
+            lastname: this.lastName?.value,
+          });
           this.isEditing = false;
           this.registerForm.disable();
         },
@@ -130,5 +133,27 @@ export class EditProfileComponent implements OnInit {
       pencilOutline,
       closeCircleOutline,
     });
+  }
+  private getUserInformationApi() {
+    this._userService
+      .profile()
+      .pipe(map((res) => res.data))
+      .subscribe({
+        next: (data) => {
+          this.userInformation = data;
+          this.setInformationProfile(data);
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+  }
+  private setInformationProfile(data: any) {
+    const initialData = {
+      firstName: data?.firstname,
+      lastName: data?.lastname,
+    };
+    this.registerForm.patchValue(initialData);
+    this.backUpForm = { ...initialData };
   }
 }

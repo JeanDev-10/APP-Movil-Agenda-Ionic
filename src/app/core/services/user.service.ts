@@ -12,7 +12,7 @@ export class UserService {
   private readonly api_url = `${environment.ApiUrl}auth`;
   private readonly _http = inject(HttpClient);
   profile() {
-    return this._http.get<ProfileI>(`${this.api_url}/profile`);
+    return this._http.get<ProfileI>(`progressbar_spinner_${this.api_url}/profile`);
   }
   logout() {
     return this._http.post<LogoutI>(`${this.api_url}/logout`, {});
