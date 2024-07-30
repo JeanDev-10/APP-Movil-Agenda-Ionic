@@ -18,6 +18,8 @@ import { splitName } from 'src/app/core/helpers/AvatarNameContact';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ContactService } from 'src/app/core/services/contact.service';
+import { EventEmissorService } from 'src/app/core/services/event-emissor.service';
+import { eventsType } from 'src/app/core/helpers/eventsType';
 @Component({
   selector: 'app-contact-create',
   templateUrl: './contact-create.page.html',
@@ -38,6 +40,8 @@ export default class ContactCreatePage{
   private toastService = inject(ToastService);
   private _contactService=inject(ContactService);
   private _router=inject(Router);
+  private _eventEmissorService=inject(EventEmissorService);
+
   firstName: string = '';
   lastName: string = '';
   contactForm!: FormGroup;
@@ -93,6 +97,7 @@ export default class ContactCreatePage{
       this._contactService.create(this.contactForm.value).subscribe({
         next:()=>{
             this.toastService.presentToastSucess('¡Contacto creado exitosamente!')
+            this._eventEmissorService.setEvent({event:eventsType.UPDATE_CONTACTS})
             this._router.navigateByUrl('/dashboard/contacts');
         },
         error:(error)=>{
@@ -104,5 +109,6 @@ export default class ContactCreatePage{
       this.toastService.presentToastError('¡Formulario invalido!');
     }
   }
+
 }
 

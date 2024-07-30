@@ -30,6 +30,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Data } from 'src/app/core/models/Contacts/ContactShow.model';
 import { ContactService } from 'src/app/core/services/contact.service';
 import { FavoriteService } from 'src/app/core/services/favorite.service';
+import { eventsType } from 'src/app/core/helpers/eventsType';
+import { EventEmissorService } from 'src/app/core/services/event-emissor.service';
 
 @Component({
   selector: 'app-contact-detail',
@@ -43,7 +45,7 @@ import { FavoriteService } from 'src/app/core/services/favorite.service';
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    AvatarInitialsComponent
+    AvatarInitialsComponent,
   ],
 })
 export default class ContactDetailPage implements OnInit {
@@ -52,37 +54,41 @@ export default class ContactDetailPage implements OnInit {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _contactService = inject(ContactService);
   private readonly _favoriteService = inject(FavoriteService);
-  private readonly _toastService= inject(ToastService);
-  private _router=inject(Router);
+  private readonly _toastService = inject(ToastService);
+  private readonly _eventEmissorService = inject(EventEmissorService);
+  private _router = inject(Router);
 
-  contact!:Data;
+  contact!: Data;
   isEditMode = false;
   isContactFavorite = false;
   firstName: string = '';
   lastName: string = '';
   contactForm!: FormGroup;
-  backUpForm:any;
+  backUpForm: any;
   constructor() {
     this.registerForm();
     this.registerIcons();
     this.contactForm.disable();
-      this.name?.valueChanges.pipe(
-        debounceTime(300),takeUntilDestroyed()
-      ).subscribe((data: string) => {
-        this.setAvatarProfile(data)
-    });
+    this.name?.valueChanges
+      .pipe(debounceTime(300), takeUntilDestroyed())
+      .subscribe((data: string) => {
+        this.setAvatarProfile(data);
+      });
   }
 
   ngOnInit() {
-    console.log('Datos enviados por Data property ==> ', this._activatedRoute.snapshot.data);
-    this.contact=this._activatedRoute.snapshot.data['contact'].data;
-    this.isContactFavorite=this.contact.favoritos?.id?true:false;
+    console.log(
+      'Datos enviados por Data property ==> ',
+      this._activatedRoute.snapshot.data
+    );
+    this.contact = this._activatedRoute.snapshot.data['contact'].data;
+    this.isContactFavorite = this.contact.favoritos?.id ? true : false;
     const initialData = {
       name: this.contact.name,
       phone: this.contact.phone,
-      nickname: this.contact.nickname
+      nickname: this.contact.nickname,
     };
-    this.setAvatarProfile(initialData.name)
+    this.setAvatarProfile(initialData.name);
     this.contactForm.patchValue(initialData);
     this.backUpForm = { ...initialData }; // Guardar una copia de los datos originales
   }
@@ -120,20 +126,24 @@ export default class ContactDetailPage implements OnInit {
       starOutline,
       star,
       closeCircleOutline,
-      trashOutline
+      trashOutline,
     });
   }
-  deleteContact(){
+  deleteContact() {
     this._contactService.delete(this.contact.id).subscribe({
-      next:()=>{
-        this._toastService.presentToastSucess("¡Contacto eliminado correctamente!")
+      next: () => {
+        this._toastService.presentToastSucess(
+          '¡Contacto eliminado correctamente!'
+        );
+        this._eventEmissorService.setEvent({
+          event: eventsType.UPDATE_CONTACTS,
+        });
         this._router.navigate(['/dashboard/contacts']);
       },
-      error:(error)=>{
+      error: (error) => {
         console.error(error);
-      }
+      },
     });
-
   }
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
@@ -147,25 +157,40 @@ export default class ContactDetailPage implements OnInit {
     const audio = new Audio('assets/sounds/water-droplet.mp3');
     audio.play();
     if (this.isContactFavorite) {
-      this._favoriteService.deleteFavorites(this.contact.favoritos?.id).subscribe({
-        next:()=>{
-          this.isContactFavorite=false
-          this.toastService.presentToastSucess("¡Eliminado de favoritos correctamente!")
-        },
-        error:(error)=>{
-          console.error(error)
-        }
-      })
+      this._favoriteService
+        .deleteFavorites(this.contact.favoritos?.id)
+        .subscribe({
+          next: () => {
+            this.isContactFavorite = false;
+            this.toastService.presentToastSucess(
+              '¡Eliminado de favoritos correctamente!'
+            );
+            this._eventEmissorService.setEvent({
+              event: eventsType.UPDATE_CONTACTS_FAVORITES,
+            });
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
     } else {
-      this._favoriteService.addFavorites({'contact_id':this.contact.id}).subscribe({
-        next:()=>{
-          this.isContactFavorite=true;
-          this.toastService.presentToastSucess("Contacto agregado a favoritos correctamente!")
-        },
-        error:(error)=>{
-          console.error(error)
-        }
-      })
+      this._favoriteService
+        .addFavorites({ contact_id: this.contact.id })
+        .subscribe({
+          next: () => {
+            this.isContactFavorite = true;
+            this._eventEmissorService.setEvent({
+              event: eventsType.UPDATE_CONTACTS_FAVORITES,
+            });
+
+            this.toastService.presentToastSucess(
+              'Contacto agregado a favoritos correctamente!'
+            );
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
     }
   }
   cancelEdit() {
@@ -184,10 +209,9 @@ export default class ContactDetailPage implements OnInit {
       this.contactForm.enable();
     }
   }
-  private setAvatarProfile(data:any){
+  private setAvatarProfile(data: any) {
     const { firstName, lastName } = splitName(data);
-      this.firstName = firstName;
-      this.lastName = lastName;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
-
 }
