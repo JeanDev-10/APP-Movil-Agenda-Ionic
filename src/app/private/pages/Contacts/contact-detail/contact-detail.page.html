@@ -22,7 +22,7 @@
       customClass="large"
     />
   </div>
-  <form [formGroup]="contactForm" (submit)="createContact()">
+  <form [formGroup]="contactForm" (submit)="editContact()">
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
       <ion-input
@@ -89,7 +89,7 @@
       ></ion-input>
       @if(nickname?.invalid && (nickname?.dirty || nickname?.touched)){
       @if(nickname?.hasError('minlength')) {
-      <ion-note color="danger"> Debe tener mínimo 10 caracteres. </ion-note>
+      <ion-note color="danger"> Debe tener mínimo 3 caracteres. </ion-note>
       } @if(nickname?.hasError('maxlength')) {
       <ion-note color="danger">
         Como máximo se permiten 10 caracteres.
@@ -105,7 +105,7 @@
         type="button"
         [disabled]="contactForm.invalid && isEditMode"
       >
-        <ion-icon name="pencil-outline" slot="start"></ion-icon>
+        <ion-icon name="pencil-outline"></ion-icon>
         {{ isEditMode ? 'Guardar' : 'Editar' }}
       </ion-button>
       <ion-button
@@ -115,27 +115,18 @@
         type="button"
         color="danger"
       >
-        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
-        Cancelar
+        <ion-icon name="close-circle-outline"></ion-icon>
       </ion-button>
-    </div>
-    <div class="flex_button_favorites">
       <ion-button
-        (click)="deleteContact()"
+        (click)="presentAlertDelete()"
         [fill]="'outline'"
         type="button"
         color="danger"
       >
-        <ion-icon slot="start" name="trash-outline"></ion-icon>Eliminar
+        <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
-    </div>
-    <div class="flex_button_favorites">
       <ion-button (click)="addFavorites()" color="warning" fill="outline">
-        <ion-icon
-          [name]="isContactFavorite?'star':'star-outline'"
-          slot="start"
-        ></ion-icon>
-        {{isContactFavorite?'Quitar de':'Añadir a'}} Favoritos
+        <ion-icon [name]="isContactFavorite?'star':'star-outline'"></ion-icon>
       </ion-button>
     </div>
   </form>

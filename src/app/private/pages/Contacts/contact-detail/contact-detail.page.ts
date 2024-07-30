@@ -1,8 +1,8 @@
-import { Contact } from './../../../../core/models/Favorites/Favorites.model';
 import { debounceTime } from 'rxjs';
 import { splitName } from './../../../../core/helpers/AvatarNameContact';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AlertController } from '@ionic/angular';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +18,6 @@ import {
   arrowForwardCircle,
   pencilOutline,
   starOutline,
-  starHalfOutline,
   closeCircleOutline,
   star,
   trashOutline,
@@ -30,6 +29,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Data } from 'src/app/core/models/Contacts/ContactShow.model';
 import { ContactService } from 'src/app/core/services/contact.service';
 import { FavoriteService } from 'src/app/core/services/favorite.service';
+import { eventsType } from 'src/app/core/helpers/eventsType';
+import { EventEmissorService } from 'src/app/core/services/event-emissor.service';
+import { ContactFormCreate } from 'src/app/core/models/Contacts/ContactForm.model';
 
 @Component({
   selector: 'app-contact-detail',
@@ -43,7 +45,7 @@ import { FavoriteService } from 'src/app/core/services/favorite.service';
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    AvatarInitialsComponent
+    AvatarInitialsComponent,
   ],
 })
 export default class ContactDetailPage implements OnInit {
@@ -52,37 +54,42 @@ export default class ContactDetailPage implements OnInit {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _contactService = inject(ContactService);
   private readonly _favoriteService = inject(FavoriteService);
-  private readonly _toastService= inject(ToastService);
-  private _router=inject(Router);
+  private readonly _toastService = inject(ToastService);
+  private readonly _eventEmissorService = inject(EventEmissorService);
+  private readonly _alertController = inject(AlertController);
+  private _router = inject(Router);
 
-  contact!:Data;
+  contact!: Data;
   isEditMode = false;
   isContactFavorite = false;
   firstName: string = '';
   lastName: string = '';
   contactForm!: FormGroup;
-  backUpForm:any;
+  backUpForm!: ContactFormCreate;
   constructor() {
     this.registerForm();
     this.registerIcons();
     this.contactForm.disable();
-      this.name?.valueChanges.pipe(
-        debounceTime(300),takeUntilDestroyed()
-      ).subscribe((data: string) => {
-        this.setAvatarProfile(data)
-    });
+    this.name?.valueChanges
+      .pipe(debounceTime(300), takeUntilDestroyed())
+      .subscribe((data: string) => {
+        this.setAvatarProfile(data);
+      });
   }
 
   ngOnInit() {
-    console.log('Datos enviados por Data property ==> ', this._activatedRoute.snapshot.data);
-    this.contact=this._activatedRoute.snapshot.data['contact'].data;
-    this.isContactFavorite=this.contact.favoritos?.id?true:false;
+    console.log(
+      'Datos enviados por Data property ==> ',
+      this._activatedRoute.snapshot.data
+    );
+    this.contact = this._activatedRoute.snapshot.data['contact'].data;
+    this.isContactFavorite = this.contact.favoritos?.id ? true : false;
     const initialData = {
       name: this.contact.name,
       phone: this.contact.phone,
-      nickname: this.contact.nickname
+      nickname: this.contact.nickname,
     };
-    this.setAvatarProfile(initialData.name)
+    this.setAvatarProfile(initialData.name);
     this.contactForm.patchValue(initialData);
     this.backUpForm = { ...initialData }; // Guardar una copia de los datos originales
   }
@@ -120,52 +127,97 @@ export default class ContactDetailPage implements OnInit {
       starOutline,
       star,
       closeCircleOutline,
-      trashOutline
+      trashOutline,
     });
   }
-  deleteContact(){
-    this._contactService.delete(this.contact.id).subscribe({
-      next:()=>{
-        this._toastService.presentToastSucess("¡Contacto eliminado correctamente!")
-        this._router.navigate(['/dashboard/contacts']);
-      },
-      error:(error)=>{
-        console.error(error);
-      }
+   async presentAlertDelete() {
+    const alert = await this._alertController.create({
+      header: 'Detalle de contacto',
+      message: '¿Estás seguro de eliminar este contacto?',
+      buttons: [
+        {
+          text: 'Sí',
+          handler: () => {
+            this.deleteContact();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+
+      ],
+      animated: true,
+      backdropDismiss: true,
     });
 
+    await alert.present();
+  }
+
+
+  deleteContact() {
+     this._contactService.delete(this.contact.id).subscribe({
+      next: () => {
+        this._toastService.presentToastSucess(
+          '¡Contacto eliminado correctamente!'
+        );
+        this._eventEmissorService.setEvent({
+          event: eventsType.UPDATE_CONTACTS,
+        });
+        this._router.navigate(['/dashboard/contacts']);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
   }
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
     if (this.isEditMode) {
       this.contactForm.enable();
     } else {
-      this.createContact();
+      this.editContact();
     }
   }
   addFavorites() {
     const audio = new Audio('assets/sounds/water-droplet.mp3');
     audio.play();
     if (this.isContactFavorite) {
-      this._favoriteService.deleteFavorites(this.contact.favoritos?.id).subscribe({
-        next:()=>{
-          this.isContactFavorite=false
-          this.toastService.presentToastSucess("¡Eliminado de favoritos correctamente!")
-        },
-        error:(error)=>{
-          console.error(error)
-        }
-      })
+      this._favoriteService
+        .deleteFavorites(this.contact.favoritos?.id)
+        .subscribe({
+          next: () => {
+            this.isContactFavorite = false;
+            this.toastService.presentToastSucess(
+              '¡Eliminado de favoritos correctamente!'
+            );
+            this._eventEmissorService.setEvent({
+              event: eventsType.UPDATE_CONTACTS_FAVORITES,
+            });
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
     } else {
-      this._favoriteService.addFavorites({'contact_id':this.contact.id}).subscribe({
-        next:()=>{
-          this.isContactFavorite=true;
-          this.toastService.presentToastSucess("Contacto agregado a favoritos correctamente!")
-        },
-        error:(error)=>{
-          console.error(error)
-        }
-      })
+      this._favoriteService
+        .addFavorites({ contact_id: this.contact.id })
+        .subscribe({
+          next: () => {
+            this.isContactFavorite = true;
+            this._eventEmissorService.setEvent({
+              event: eventsType.UPDATE_CONTACTS_FAVORITES,
+            });
+
+            this.toastService.presentToastSucess(
+              'Contacto agregado a favoritos correctamente!'
+            );
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
     }
   }
   cancelEdit() {
@@ -173,21 +225,49 @@ export default class ContactDetailPage implements OnInit {
     this.contactForm.disable();
     this.contactForm.reset(this.backUpForm);
   }
-  createContact() {
+  editContact() {
     if (this.contactForm.valid) {
-      console.log(this.contactForm.value);
-      this.toastService.presentToastSucess('¡Formulario valido!');
-      this.contactForm.disable();
+      if (this.verifyChangesToEditContact()) {
+        this._toastService.presentToastError(
+          '¡No has realizado ningun cambio en los datos!'
+        );
+      this.isEditMode = !this.isEditMode;
+
+      } else {
+        this._contactService
+          .editContact(this.contact.id, this.contactForm.value)
+          .subscribe({
+            next: () => {
+              this.toastService.presentToastSucess(
+                '¡Contacto editado exitosamente!'
+              );
+              this._eventEmissorService.setEvent({
+                event: eventsType.UPDATE_CONTACTS,
+              });
+              this.backUpForm = this.contactForm.value;
+              this.contactForm.disable();
+            },
+            error: (error) => {
+              console.error(error);
+            },
+          });
+      }
     } else {
       this.toastService.presentToastError('¡Formulario invalido!');
       this.isEditMode = !this.isEditMode;
       this.contactForm.enable();
     }
   }
-  private setAvatarProfile(data:any){
+  private setAvatarProfile(data: any) {
     const { firstName, lastName } = splitName(data);
-      this.firstName = firstName;
-      this.lastName = lastName;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
-
+  private verifyChangesToEditContact():boolean{
+    if(this.backUpForm.name==this.name?.value&&this.backUpForm.nickname==this.nickname?.value&&this.backUpForm.phone===this.phone?.value){
+      return true;
+    }else{
+      return false
+    }
+  }
 }
