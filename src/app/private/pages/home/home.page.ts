@@ -61,6 +61,7 @@ export class HomePage implements OnInit {
   }
   ngOnInit(): void {
     this.contactsApi();
+    this.contactsFavoritesApi();
   }
   private contactsApi() {
     this.contacts$ = this._contactService.getContacts();

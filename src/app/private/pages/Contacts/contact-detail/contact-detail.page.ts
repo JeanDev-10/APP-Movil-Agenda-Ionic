@@ -1,8 +1,8 @@
-import { Contact } from './../../../../core/models/Favorites/Favorites.model';
 import { debounceTime } from 'rxjs';
 import { splitName } from './../../../../core/helpers/AvatarNameContact';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AlertController } from '@ionic/angular';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +18,6 @@ import {
   arrowForwardCircle,
   pencilOutline,
   starOutline,
-  starHalfOutline,
   closeCircleOutline,
   star,
   trashOutline,
@@ -32,6 +31,7 @@ import { ContactService } from 'src/app/core/services/contact.service';
 import { FavoriteService } from 'src/app/core/services/favorite.service';
 import { eventsType } from 'src/app/core/helpers/eventsType';
 import { EventEmissorService } from 'src/app/core/services/event-emissor.service';
+import { ContactFormCreate } from 'src/app/core/models/Contacts/ContactForm.model';
 
 @Component({
   selector: 'app-contact-detail',
@@ -56,6 +56,7 @@ export default class ContactDetailPage implements OnInit {
   private readonly _favoriteService = inject(FavoriteService);
   private readonly _toastService = inject(ToastService);
   private readonly _eventEmissorService = inject(EventEmissorService);
+  private readonly _alertController = inject(AlertController);
   private _router = inject(Router);
 
   contact!: Data;
@@ -64,7 +65,7 @@ export default class ContactDetailPage implements OnInit {
   firstName: string = '';
   lastName: string = '';
   contactForm!: FormGroup;
-  backUpForm: any;
+  backUpForm!: ContactFormCreate;
   constructor() {
     this.registerForm();
     this.registerIcons();
@@ -129,8 +130,34 @@ export default class ContactDetailPage implements OnInit {
       trashOutline,
     });
   }
+   async presentAlertDelete() {
+    const alert = await this._alertController.create({
+      header: 'Detalle de contacto',
+      message: '¿Estás seguro de eliminar este contacto?',
+      buttons: [
+        {
+          text: 'Sí',
+          handler: () => {
+            this.deleteContact();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+
+      ],
+      animated: true,
+      backdropDismiss: true,
+    });
+
+    await alert.present();
+  }
+
+
   deleteContact() {
-    this._contactService.delete(this.contact.id).subscribe({
+     this._contactService.delete(this.contact.id).subscribe({
       next: () => {
         this._toastService.presentToastSucess(
           '¡Contacto eliminado correctamente!'
@@ -200,21 +227,31 @@ export default class ContactDetailPage implements OnInit {
   }
   editContact() {
     if (this.contactForm.valid) {
-      this._contactService
-        .editContact(this.contact.id, this.contactForm.value)
-        .subscribe({
-          next: () => {
-            this.toastService.presentToastSucess(
-              '¡Contacto editado exitosamente!'
-            );
-            this._eventEmissorService.setEvent({event:eventsType.UPDATE_CONTACTS})
-            this.backUpForm=this.contactForm.value;
-            this.contactForm.disable();
-          },
-          error: (error) => {
-            console.error(error);
-          },
-        });
+      if (this.verifyChangesToEditContact()) {
+        this._toastService.presentToastError(
+          '¡No has realizado ningun cambio en los datos!'
+        );
+      this.isEditMode = !this.isEditMode;
+
+      } else {
+        this._contactService
+          .editContact(this.contact.id, this.contactForm.value)
+          .subscribe({
+            next: () => {
+              this.toastService.presentToastSucess(
+                '¡Contacto editado exitosamente!'
+              );
+              this._eventEmissorService.setEvent({
+                event: eventsType.UPDATE_CONTACTS,
+              });
+              this.backUpForm = this.contactForm.value;
+              this.contactForm.disable();
+            },
+            error: (error) => {
+              console.error(error);
+            },
+          });
+      }
     } else {
       this.toastService.presentToastError('¡Formulario invalido!');
       this.isEditMode = !this.isEditMode;
@@ -225,5 +262,12 @@ export default class ContactDetailPage implements OnInit {
     const { firstName, lastName } = splitName(data);
     this.firstName = firstName;
     this.lastName = lastName;
+  }
+  private verifyChangesToEditContact():boolean{
+    if(this.backUpForm.name==this.name?.value&&this.backUpForm.nickname==this.nickname?.value&&this.backUpForm.phone===this.phone?.value){
+      return true;
+    }else{
+      return false
+    }
   }
 }
