@@ -69,9 +69,18 @@
   <ion-list>
     @if(selectedSegment==='contacts'){ @if(contacts$|async; as contacts){
     @for(item of contacts.data.data; track item.id) {
-    <app-list-contact [contact]="item" />} } }
+    <app-list-contact [contact]="item" />}
+      @empty {
+        <app-list-no-contact [text]="'No tienes contactos, agrega'" />
+      }
+  } }
     @if(selectedSegment==='favorites'){ @if(favorites$|async; as favorites){
     @for(item of favorites.data.data; track item.id) {
-    <app-list-contact [contact]="item.contact" />} } }
+    <app-list-contact [contact]="item.contact" />
+
+    } @empty {
+      <app-list-no-contact [text]="'No tienes contactos favoritos'" />
+
+     }} }
   </ion-list>
 </ion-content>

@@ -14,15 +14,16 @@ import { ContactGetI } from 'src/app/core/models/Contacts/Contact.model';
 import { ContactService } from 'src/app/core/services/contact.service';
 import { FavoriteGetI } from 'src/app/core/models/Favorites/Favorites.model';
 import { FavoriteService } from 'src/app/core/services/favorite.service';
+import { ListNoContactComponent } from './components/list-no-contact/list-no-contact.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonicModule, NavbarComponent, CommonModule, FormsModule,ListContactComponent,RouterModule,AvatarInitialsComponent],
+  imports: [IonicModule, NavbarComponent, CommonModule, FormsModule,ListContactComponent,RouterModule,AvatarInitialsComponent,ListNoContactComponent],
 })
-export class HomePage  {
+export class HomePage implements OnInit  {
   selectedSegment: string = 'contacts';
   selectedFilter:string="Todos"
   selectedSearch:string="Nombre"
@@ -34,6 +35,10 @@ export class HomePage  {
   private router=inject(Router);
   constructor() {
     this.registerIcons();
+
+  }
+  ngOnInit(): void {
+    console.log("home on init")
     this.contacts$=this._contactService.getContacts();
     this.favorites$=this._favoriteService.getFavorites();
   }
