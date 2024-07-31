@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { LogoutI, ProfileI } from 'src/app/auth/models/auth.model';
 import { environment } from 'src/environments/environment';
-import { UserEditProfileI } from '../models/User.model';
+import { ResponseCommon, UserEditProfileI } from '../models/User.model';
 import { UserFormChangePasswordI, UserFormCheckPasswordI, UserFormEditProfileI } from '../models/UserForm.model';
 
 @Injectable({
@@ -25,5 +25,8 @@ export class UserService {
   }
   checkPassword(body:UserFormCheckPasswordI){
     return this._http.post<UserEditProfileI>(`progressbar_spinner_${this.api_url}/check-password`, body);
+  }
+  refreshToken(){
+    return this._http.post<ResponseCommon>(`${this.api_url}/refresh`,{});
   }
 }

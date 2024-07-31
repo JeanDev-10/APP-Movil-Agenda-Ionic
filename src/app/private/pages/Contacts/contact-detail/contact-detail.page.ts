@@ -165,6 +165,9 @@ export default class ContactDetailPage implements OnInit {
         this._eventEmissorService.setEvent({
           event: eventsType.UPDATE_CONTACTS,
         });
+        this._eventEmissorService.setEvent({
+          event: eventsType.UPDATE_CONTACTS_FAVORITES,
+        });
         this._router.navigate(['/dashboard/contacts']);
       },
       error: (error) => {
