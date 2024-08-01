@@ -5,25 +5,43 @@ import { ToastController } from '@ionic/angular';
   providedIn: 'root'
 })
 export class ToastService {
-
+  private toastQueue: string[] = [];
+  private isToastPresenting = false;
   constructor(private toastController: ToastController) { }
 
+  async presentToastError(message: string) {
+    this.toastQueue.push(message);
+    this.presentNextToast();
+  }
   async presentToastSucess(message: string) {
     const toast = await this.toastController.create({
       message: message,
       duration: 2000,
       position: 'bottom',
-      cssClass:'custom-toast-success'
+      cssClass:'custom-toast-success',
     });
     toast.present();
   }
-  async presentToastError(message: string) {
+  private async presentNextToast() {
+    if (this.isToastPresenting || this.toastQueue.length === 0) {
+      return;
+    }
+
+    this.isToastPresenting = true;
+    const message = this.toastQueue.shift();
+
     const toast = await this.toastController.create({
       message: message,
       duration: 2000,
       position: 'bottom',
-      cssClass:'custom-toast-error'
+      cssClass: 'custom-toast-error',
     });
-    toast.present();
+
+    toast.onDidDismiss().then(() => {
+      this.isToastPresenting = false;
+      this.presentNextToast();
+    });
+
+    await toast.present();
   }
 }
