@@ -1,8 +1,14 @@
 import { eventsType } from './../../../core/helpers/eventsType';
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { IonContent, IonInfiniteScroll } from '@ionic/angular';
 import { IonicModule } from '@ionic/angular';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { addIcons } from 'ionicons';
@@ -10,7 +16,7 @@ import { call, callOutline, filter, star, starOutline } from 'ionicons/icons';
 import { ListContactComponent } from '../../components/list-contact/list-contact.component';
 import { Router, RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap, tap } from 'rxjs';
 import { ContactGetI } from 'src/app/core/models/Contacts/Contact.model';
 import { ContactService } from 'src/app/core/services/contact.service';
 import { FavoriteGetI } from 'src/app/core/models/Favorites/Favorites.model';
@@ -36,38 +42,122 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   ],
 })
 export class HomePage implements OnInit {
+  @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
+  @ViewChild(IonContent) content!: IonContent;
   selectedSegment: string = 'contacts';
   selectedFilter: string = 'Todos';
   selectedSearch: string = 'Nombre';
   filter: string = 'name';
-  contacts$: Observable<ContactGetI> = new Observable<ContactGetI>();
-  favorites$: Observable<FavoriteGetI> = new Observable<FavoriteGetI>();
+  nextPage!: string;
+  nextPageFavorites!: string;
+  contacts!: ContactGetI;
+  favorites!: FavoriteGetI;
+  isLoadingContacts = false;
+  isLoadingContactsFavorite = false;
   private readonly _contactService = inject(ContactService);
   private readonly _favoriteService = inject(FavoriteService);
   private readonly _eventEmissorService = inject(EventEmissorService);
   private router = inject(Router);
   constructor() {
+    console.log('se ejecuta constructor');
     this.registerIcons();
-    this._eventEmissorService.getEvent().pipe(takeUntilDestroyed()).subscribe({
-      next: (event) => {
-        if (event.event == eventsType.UPDATE_CONTACTS) {
-          this.contactsApi();
-        }
-        if(event.event==eventsType.UPDATE_CONTACTS_FAVORITES){
-          this.contactsFavoritesApi()
-        }
-      },
-    });
+    this._eventEmissorService
+      .getEvent()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (event) => {
+          if (event.event == eventsType.UPDATE_CONTACTS) {
+            this.enableInfiniteScroll();
+            this.contactsApi();
+          }
+          if (event.event == eventsType.UPDATE_CONTACTS_FAVORITES) {
+            this.contactsFavoritesApi();
+          }
+        },
+      });
   }
   ngOnInit(): void {
     this.contactsApi();
     this.contactsFavoritesApi();
   }
+  onIonInfiniteContacts(event: any) {
+    if (this.isLoadingContacts) {
+      event.target.complete();
+      return;
+    }
+
+    this.isLoadingContacts = true;
+
+    if (this.nextPage !== 'null') {
+      this.contactsApiPaginate();
+    } else {
+      this.isLoadingContacts = false;
+      this.infiniteScroll.disabled = true;
+    }
+    event.target.complete();
+  }
+  onIonInfiniteContactsFavorites(event: any) {
+    if (this.isLoadingContacts) {
+      event.target.complete();
+      return;
+    }
+
+    this.isLoadingContactsFavorite = true;
+
+    if (this.nextPageFavorites !== 'null') {
+      this.contactsApiPaginateFavorites();
+    } else {
+      this.isLoadingContactsFavorite = false;
+      this.infiniteScroll.disabled = true;
+    }
+    event.target.complete();
+  }
   private contactsApi() {
-    this.contacts$ = this._contactService.getContacts();
+    this._contactService.getContacts().subscribe({
+      next: (data) => {
+        this.contacts = data;
+        this.nextPage =
+          data.data.links.next != null ? data.data.links.next : 'null';
+      },
+    });
+  }
+  ionViewDidEnter() {
+    console.log('vuelve a la vista');
+    this.enableInfiniteScroll();
+    this.scrollTop();
+  }
+  private contactsApiPaginate() {
+    this._contactService.getContactsPaginate(this.nextPage).subscribe({
+      next: (data) => {
+        data.data.data.forEach((d) => {
+          this.contacts?.data.data.push(d);
+        });
+        this.isLoadingContacts = false;
+        this.nextPage =
+          data.data.links.next != null ? data.data.links.next : 'null';
+      },
+    });
+  }
+  private contactsApiPaginateFavorites() {
+    this._favoriteService.getContactsPaginate(this.nextPageFavorites).subscribe({
+      next: (data) => {
+        data.data.data.forEach((d) => {
+          this.favorites.data.data.push(d);
+        });
+        this.isLoadingContactsFavorite = false;
+        this.nextPageFavorites =
+          data.data.links.next != null ? data.data.links.next : 'null';
+      },
+    });
   }
   private contactsFavoritesApi() {
-    this.favorites$ = this._favoriteService.getFavorites();
+    this._favoriteService.getFavorites().subscribe({
+      next: (data) => {
+        this.favorites = data;
+        this.nextPageFavorites =
+          data.data.links.next != null ? data.data.links.next : 'null';
+      },
+    });
   }
   onChipClick(searchType: string) {
     this.selectedSearch = searchType;
@@ -96,17 +186,27 @@ export class HomePage implements OnInit {
   }
   handleChangeFilter(e: any) {
     this.filter = e.detail.value;
-    if (this.filter == 'all') {
-      this.selectedFilter = 'Todos';
-    }
-    if (this.filter == 'name') {
-      this.selectedFilter = 'Nombre';
-    }
-    if (this.filter === 'phone') {
-      this.selectedFilter = 'Telefono';
-    }
-    if (this.filter === 'nickname') {
-      this.selectedFilter = 'Apodo';
+    this.selectedFilter =
+      this.filter === 'all'
+        ? 'Todos'
+        : this.filter === 'name'
+        ? 'Nombre'
+        : this.filter === 'phone'
+        ? 'Telefono'
+        : 'Apodo';
+  }
+
+  scrollTop() {
+    this.content.scrollToTop(500);
+  }
+  enableInfiniteScroll() {
+    if (this.infiniteScroll) {
+      console.log('habilitado scroll');
+      console.log(this.infiniteScroll);
+      this.infiniteScroll.disabled = false;
+      this.infiniteScroll.complete();
+    } else {
+      console.log('no entró al scroll');
     }
   }
 }

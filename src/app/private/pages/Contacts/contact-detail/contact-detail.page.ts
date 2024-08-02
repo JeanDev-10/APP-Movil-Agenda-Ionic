@@ -171,6 +171,7 @@ export default class ContactDetailPage implements OnInit {
         this._router.navigate(['/dashboard/contacts']);
       },
       error: (error) => {
+
         console.error(error);
       },
     });

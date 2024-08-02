@@ -26,7 +26,7 @@ export interface Contact {
 export interface Links {
   first: string;
   last:  string;
-  prev:  null;
+  prev:  string;
   next:  string;
 }
 

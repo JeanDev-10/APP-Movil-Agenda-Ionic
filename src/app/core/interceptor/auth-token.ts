@@ -8,7 +8,6 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { LocalStorageService } from '../services/local-storage.service';
 import { UserService } from '../services/user.service';
-import { ResponseCommon } from '../models/User.model';
 import { Router } from '@angular/router';
 import { ToastService } from '../services/toast.service';
 
@@ -37,27 +36,40 @@ export class authTokenInterceptor implements HttpInterceptor {
     console.log(request);
     return next.handle(request).pipe(
       catchError((err) => {
-        if(err.status==401&&(err.message=="Token expirado"||"Token invalido")){
-          return this._userService.refreshToken().pipe(
-            switchMap((res) => {
-              this._localStorageService.setToken(res.data);
-              const token=res.data;
-              const newReq = req.clone({
-                setHeaders: {
-                  authorization: `Bearer ${token}`,
-                },
-              });
-              return next.handle(newReq);
-            }),
-            catchError((err) => {
-              const finalError = new Error();
-              this._localStorageService.deleteToken();
-              this._toastService.presentToastError("¡Sesión finalizada!")
-              this._router.navigateByUrl('/auth/login');
-              return throwError(() => finalError);
-            })
-          );
+        console.log(err);
+        if (err.status == 401) {
+          if (
+            err.error.message == 'Token expirado' ||
+            err.error.message == 'Token invalido'
+          ) {
+            console.log('entra refresh token por token invalido o expirado');
+            return this._userService.refreshToken().pipe(
+              switchMap((res) => {
+                this._localStorageService.setToken(res.data);
+                const token = res.data;
+                const newReq = req.clone({
+                  setHeaders: {
+                    authorization: `Bearer ${token}`,
+                  },
+                });
+                return next.handle(newReq);
+              }),
+              catchError((err) => {
+                const finalError = new Error();
+                this._localStorageService.deleteToken();
+                this._toastService.presentToastError('¡Sesión finalizada!');
+                this._router.navigateByUrl('/auth/login');
+                return throwError(() => finalError);
+              })
+            );
+          }
+          if (err.error.message === 'No autenticado') {
+            this._localStorageService.deleteToken();
+            this._toastService.presentToastError('¡Sesión finalizada!');
+            this._router.navigateByUrl('/auth/login');
+          }
         }
+        console.error(err);
         return throwError(() => err);
       })
     );
@@ -67,6 +79,3 @@ export class authTokenInterceptor implements HttpInterceptor {
     return url.replace('white_', '');
   }
 }
-
-
-

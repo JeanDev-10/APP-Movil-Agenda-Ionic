@@ -1,4 +1,3 @@
-import * as jwt_decode from 'jwt-decode';
 import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
@@ -19,17 +18,9 @@ export class LocalStorageService {
     //verificar token
     const token = localStorage.getItem('token');
     if (!token) return false;
-    return this.VerifyisTokenValid(token);
+    return true;
   }
-  VerifyisTokenValid(token: string): boolean {
-    try {
-      const decoded: any = jwt_decode.jwtDecode(token);
-      const currentTime = Math.floor(Date.now() / 1000);
-      return decoded.exp > currentTime;
-    } catch (error) {
-      return false;
-    }
-  }
+
   deleteToken() {
     return localStorage.removeItem('token');
   }

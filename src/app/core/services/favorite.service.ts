@@ -20,4 +20,8 @@ export class FavoriteService {
   deleteFavorites(id: number | undefined) {
     return this._http.delete<ResponseCommon>(`${this.api_url}/${id}`);
   }
+  getContactsPaginate(url:string){
+    return this._http.get<FavoriteGetI>(`progressbar_spinner_${url}`);
+  }
+
 }

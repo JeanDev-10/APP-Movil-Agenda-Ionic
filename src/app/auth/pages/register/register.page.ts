@@ -98,9 +98,6 @@ export default class RegisterPage {
         },
       });
     } else {
-      /**
-       * ! MOSTRAR TOAST DE FORMULARIO INVALIDO
-       *  */
       this.toastService.presentToastError('¡Formulario invalido!');
     }
   }

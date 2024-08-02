@@ -27,4 +27,7 @@ export class ContactService {
   editContact(id:string,body:ContactFormCreate){
     return this._http.put<ResponseCommon>(`${this.api_url}/${id}`,body);
   }
+  getContactsPaginate(url:string){
+    return this._http.get<ContactGetI>(`progressbar_spinner_${url}`);
+  }
 }

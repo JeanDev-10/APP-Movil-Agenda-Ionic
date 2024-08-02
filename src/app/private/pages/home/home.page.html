@@ -64,23 +64,38 @@
     </ion-avatar>
     <ion-label>Crear Contacto</ion-label>
   </ion-item>
-  }
-
+  } @if(selectedSegment==='contacts'){
   <ion-list>
-    @if(selectedSegment==='contacts'){ @if(contacts$|async; as contacts){
-    @for(item of contacts.data.data; track item.id) {
-    <app-list-contact [contact]="item" />}
-      @empty {
-        <app-list-no-contact [text]="'No tienes contactos, agrega'" />
-      }
-  } }
-    @if(selectedSegment==='favorites'){ @if(favorites$|async; as favorites){
-    @for(item of favorites.data.data; track item.id) {
+    @if(contacts){ @for(item of contacts.data.data; track
+    item.id) {
+    <app-list-contact [contact]="item" />} @empty {
+    <app-list-no-contact [text]="'No tienes contactos, agrega'" />
+    } }
+  </ion-list>
+  <ion-infinite-scroll (ionInfinite)="onIonInfiniteContacts($event)" [disabled]="isLoadingContacts">
+    <ion-infinite-scroll-content
+      loadingText="Cargando más contactos"
+      loadingSpinner="bubbles"
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  } @if(selectedSegment==='favorites'){
+  <ion-list>
+    @if(favorites){ @for(item of favorites.data.data; track
+    item.id) {
     <app-list-contact [contact]="item.contact" />
 
     } @empty {
-      <app-list-no-contact [text]="'No tienes contactos favoritos'" />
+    <app-list-no-contact [text]="'No tienes contactos favoritos'" />
 
-     }} }
-  </ion-list>
+    }} </ion-list
+
+  >
+  <ion-infinite-scroll (ionInfinite)="onIonInfiniteContactsFavorites($event)" [disabled]="isLoadingContactsFavorite">
+    <ion-infinite-scroll-content
+      loadingText="Cargando más contactos favoritos"
+      loadingSpinner="bubbles"
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+}
 </ion-content>
