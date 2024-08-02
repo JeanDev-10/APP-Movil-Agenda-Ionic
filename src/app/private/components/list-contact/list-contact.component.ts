@@ -22,7 +22,7 @@ export class ListContactComponent implements OnInit {
     const {firstName,lastName}=splitName(this.contact.name);
     this.firtsname=firstName;
     this.lastname=lastName;
-    console.log(this.contact)
+
   }
 
 
