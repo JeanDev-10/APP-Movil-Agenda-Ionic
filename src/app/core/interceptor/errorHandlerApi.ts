@@ -16,10 +16,12 @@ export const ErrorApiInterceptorFn: HttpInterceptorFn = (req, next) => {
       }
       if(error.status==422){
         console.log(error);
-        const errores=error.error.data
-        Object.keys(errores).forEach(key => {
-        _toastService.presentToastError(errores[key]);
-        });
+          const errores=error.error.data
+          Object.keys(errores).forEach(key => {
+          _toastService.presentToastError(errores[key]);
+          });
+
+
       }
       console.error('hay un error', error);
       return throwError(() => error);

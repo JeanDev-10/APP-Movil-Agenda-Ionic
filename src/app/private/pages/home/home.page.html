@@ -80,7 +80,7 @@
   </ion-infinite-scroll>
   } @if(selectedSegment==='favorites'){
   <ion-list>
-    @if(favorites$|async; as favorites){ @for(item of favorites.data.data; track
+    @if(favorites){ @for(item of favorites.data.data; track
     item.id) {
     <app-list-contact [contact]="item.contact" />
 
@@ -88,5 +88,14 @@
     <app-list-no-contact [text]="'No tienes contactos favoritos'" />
 
     }} </ion-list
-  >}
+
+  >
+  <ion-infinite-scroll (ionInfinite)="onIonInfiniteContactsFavorites($event)" [disabled]="isLoadingContactsFavorite">
+    <ion-infinite-scroll-content
+      loadingText="Cargando más contactos favoritos"
+      loadingSpinner="bubbles"
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+}
 </ion-content>

@@ -38,7 +38,10 @@ export class authTokenInterceptor implements HttpInterceptor {
       catchError((err) => {
         console.log(err);
         if (err.status == 401) {
-          if (err.error.message =='Token expirado'||err.error.message=='Token invalido') {
+          if (
+            err.error.message == 'Token expirado' ||
+            err.error.message == 'Token invalido'
+          ) {
             console.log('entra refresh token por token invalido o expirado');
             return this._userService.refreshToken().pipe(
               switchMap((res) => {
@@ -59,6 +62,11 @@ export class authTokenInterceptor implements HttpInterceptor {
                 return throwError(() => finalError);
               })
             );
+          }
+          if (err.error.message === 'No autenticado') {
+            this._localStorageService.deleteToken();
+            this._toastService.presentToastError('¡Sesión finalizada!');
+            this._router.navigateByUrl('/auth/login');
           }
         }
         console.error(err);
