@@ -36,22 +36,22 @@
     <ion-chip
       size="sm"
       [outline]="true"
-      [color]="selectedSearch === 'Nombre' ? 'success' : 'default'"
-      (click)="onChipClick('Nombre')"
+      [color]="selectedSearch === 'name' ? 'success' : 'default'"
+      (click)="onChipClick('name')"
       >Nombre</ion-chip
     >
     <ion-chip
       size="sm"
       [outline]="true"
-      [color]="selectedSearch === 'Apodo' ? 'success' : 'default'"
-      (click)="onChipClick('Apodo')"
+      [color]="selectedSearch === 'nickname' ? 'success' : 'default'"
+      (click)="onChipClick('nickname')"
       >Apodo</ion-chip
     >
     <ion-chip
       size="sm"
       [outline]="true"
-      [color]="selectedSearch === 'Teléfono' ? 'success' : 'default'"
-      (click)="onChipClick('Teléfono')"
+      [color]="selectedSearch === 'phone' ? 'success' : 'default'"
+      (click)="onChipClick('phone')"
       >Teléfono</ion-chip
     >
   </div>
@@ -66,13 +66,17 @@
   </ion-item>
   } @if(selectedSegment==='contacts'){
   <ion-list>
-    @if(contacts){ @for(item of contacts.data.data; track
-    item.id) {
-    <app-list-contact [contact]="item" />} @empty {
-    <app-list-no-contact [text]="'No tienes contactos, agrega'" />
-    } }
+    @if(contacts){ @for(item of contacts.data.data; track item.id) {
+    <app-list-contact [contact]="item" />} @empty { @if(IsSearchContact===true){
+    <app-list-no-contact [text]="'No se ha encontrado ningún contacto'" />
+    }@else {
+    <app-list-no-contact [text]="'No tienes contactos favoritos'" />
+    } } }
   </ion-list>
-  <ion-infinite-scroll (ionInfinite)="onIonInfiniteContacts($event)" [disabled]="isLoadingContacts">
+  <ion-infinite-scroll
+    (ionInfinite)="onIonInfiniteContacts($event)"
+    [disabled]="isLoadingContacts"
+  >
     <ion-infinite-scroll-content
       loadingText="Cargando más contactos"
       loadingSpinner="bubbles"
@@ -80,22 +84,24 @@
   </ion-infinite-scroll>
   } @if(selectedSegment==='favorites'){
   <ion-list>
-    @if(favorites){ @for(item of favorites.data.data; track
-    item.id) {
+    @if(favorites){ @for(item of favorites.data.data; track item.id) {
     <app-list-contact [contact]="item.contact" />
 
-    } @empty {
+    } @empty { @if(IsSearchContact===true){
+    <app-list-no-contact [text]="'No se ha encontrado ningún contacto'" />
+    }@else {
     <app-list-no-contact [text]="'No tienes contactos favoritos'" />
-
-    }} </ion-list
-
+    } } }
+  </ion-list>
+  <ion-infinite-scroll
+    (ionInfinite)="onIonInfiniteContactsFavorites($event)"
+    [disabled]="isLoadingContactsFavorite"
   >
-  <ion-infinite-scroll (ionInfinite)="onIonInfiniteContactsFavorites($event)" [disabled]="isLoadingContactsFavorite">
     <ion-infinite-scroll-content
       loadingText="Cargando más contactos favoritos"
       loadingSpinner="bubbles"
     ></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
-}
+  }
 </ion-content>

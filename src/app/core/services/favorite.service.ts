@@ -23,5 +23,8 @@ export class FavoriteService {
   getContactsPaginate(url:string){
     return this._http.get<FavoriteGetI>(`progressbar_spinner_${url}`);
   }
+  getContactsFavoriteByName(name:string,query:string){
+    return this._http.get<FavoriteGetI>(`progressbar_spinner_${this.api_url}?${query}=${name}`);
+  }
 
 }

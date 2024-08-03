@@ -21,10 +21,13 @@ export class LocalStorageService {
   private isTokenValid(): boolean {
     //verificar token
     const token = localStorage.getItem('token');
-    if (!token) return false;
-    return this.VerifyisTokenValid(token);
+    if (token) return true;
+    return false;
   }
-  VerifyisTokenValid(token: string): boolean {
+
+
+
+  /* VerifyisTokenValid(token: string): boolean {
     try {
       const decoded: any = jwt_decode.jwtDecode(token);
       const currentTime = Math.floor(Date.now() / 1000);
@@ -32,7 +35,7 @@ export class LocalStorageService {
     } catch (error) {
       return false;
     }
-  }
+  } */
   deleteToken() {
     return localStorage.removeItem('token');
   }
