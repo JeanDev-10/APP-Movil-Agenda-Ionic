@@ -80,7 +80,6 @@ export class HomePage implements OnInit {
   }
   ngOnInit(): void {
     this.contactsApi();
-    this.contactsFavoritesApi();
   }
   onIonInfiniteContacts(event: any) {
     if (this.isLoadingContacts) {
