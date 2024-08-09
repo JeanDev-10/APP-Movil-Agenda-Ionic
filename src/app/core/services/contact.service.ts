@@ -30,4 +30,13 @@ export class ContactService {
   getContactsPaginate(url:string){
     return this._http.get<ContactGetI>(`progressbar_spinner_${url}`);
   }
+  getContactsByName(name:string,query:string){
+    return this._http.get<ContactGetI>(`progressbar_spinner_${this.api_url}?${query}=${name}`);
+  }
+  getContactsByNameAndOrder(name:string="",query:string,order:string){
+    return this._http.get<ContactGetI>(`progressbar_spinner_${this.api_url}?${query}=${name}&orderBy=${order}`);
+  }
+  getContactsByOrder(order:string){
+    return this._http.get<ContactGetI>(`progressbar_spinner_${this.api_url}?orderBy=${order}`);
+  }
 }

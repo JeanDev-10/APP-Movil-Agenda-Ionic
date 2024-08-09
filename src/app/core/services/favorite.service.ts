@@ -23,5 +23,14 @@ export class FavoriteService {
   getContactsPaginate(url:string){
     return this._http.get<FavoriteGetI>(`progressbar_spinner_${url}`);
   }
+  getContactsFavoriteByName(name:string,query:string){
+    return this._http.get<FavoriteGetI>(`progressbar_spinner_${this.api_url}?${query}=${name}`);
+  }
+  getContactsFavoriteByNameAndOrder(name:string="",query:string,order:string){
+    return this._http.get<FavoriteGetI>(`progressbar_spinner_${this.api_url}?${query}=${name}&orderBy=${order}`);
+  }
+  getContactsFavoriteByOrder(order:string){
+    return this._http.get<FavoriteGetI>(`progressbar_spinner_${this.api_url}?orderBy=${order}`);
+  }
 
 }

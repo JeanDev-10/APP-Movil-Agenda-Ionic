@@ -21,15 +21,25 @@ export class LocalStorageService {
   private isTokenValid(): boolean {
     //verificar token
     const token = localStorage.getItem('token');
-    if (!token) return false;
-    return this.VerifyisTokenValid(token);
+    if (token){
+      return this.VerifyisTokenValid(token);
+    }
+    return false;
   }
-  VerifyisTokenValid(token: string): boolean {
+
+
+
+   VerifyisTokenValid(token: string): boolean {
     try {
       const decoded: any = jwt_decode.jwtDecode(token);
-      const currentTime = Math.floor(Date.now() / 1000);
-      return decoded.exp > currentTime;
+
+      // Verificar si el token tiene las propiedades necesarias
+      if (!decoded || !decoded.sub || !decoded.iss) {
+        return false;
+      }
+      return true;
     } catch (error) {
+      console.error('Token inválido', error);
       return false;
     }
   }
