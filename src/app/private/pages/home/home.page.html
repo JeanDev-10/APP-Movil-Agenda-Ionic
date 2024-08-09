@@ -20,14 +20,13 @@
   <div class="flex_search_and_filter searchContact">
     <ion-searchbar
       [debounce]="1000"
-      (ionInput)="handleInputContacts($event,'contacts')"
+      (ionInput)="handleInputContacts($event)"
     >
     </ion-searchbar>
     <ion-item>
       <ion-select value="all" (ionChange)="handleChangeFilter($event)">
         <ion-select-option value="all">Todos</ion-select-option>
         <ion-select-option value="name">Nombre</ion-select-option>
-        <ion-select-option value="phone">Telefono</ion-select-option>
         <ion-select-option value="nickname">Apodo</ion-select-option>
       </ion-select>
     </ion-item>
@@ -46,13 +45,6 @@
       [color]="selectedSearch === 'nickname' ? 'success' : 'default'"
       (click)="onChipClick('nickname')"
       >Apodo</ion-chip
-    >
-    <ion-chip
-      size="sm"
-      [outline]="true"
-      [color]="selectedSearch === 'phone' ? 'success' : 'default'"
-      (click)="onChipClick('phone')"
-      >Teléfono</ion-chip
     >
   </div>
 

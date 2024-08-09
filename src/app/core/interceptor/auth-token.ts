@@ -55,6 +55,7 @@ export class authTokenInterceptor implements HttpInterceptor {
                 return next.handle(newReq);
               }),
               catchError((err) => {
+                console.log("error en el refresh token")
                 const finalError = new Error();
                 this._localStorageService.deleteToken();
                 this._toastService.presentToastError('¡Sesión finalizada!');

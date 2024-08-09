@@ -1,6 +1,5 @@
 import { eventsType } from './../../../core/helpers/eventsType';
 import {
-  AfterViewInit,
   Component,
   OnInit,
   ViewChild,
@@ -14,9 +13,9 @@ import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.compone
 import { addIcons } from 'ionicons';
 import { call, callOutline, filter, star, starOutline } from 'ionicons/icons';
 import { ListContactComponent } from '../../components/list-contact/list-contact.component';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AvatarInitialsComponent } from 'src/app/shared/components/avatar-initials/avatar-initials.component';
-import { distinctUntilChanged, map, Observable, switchMap, tap } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs';
 import { ContactGetI } from 'src/app/core/models/Contacts/Contact.model';
 import { ContactService } from 'src/app/core/services/contact.service';
 import { FavoriteGetI } from 'src/app/core/models/Favorites/Favorites.model';
@@ -47,9 +46,9 @@ export class HomePage implements OnInit {
   selectedSegment: string = 'contacts';
   selectedFilter: string = 'Todos';
   selectedSearch: string = 'name';
-  queryContacts:string="";
+  queryContacts: string = '';
   IsSearchContact: boolean = false;
-  filter: string = 'name';
+  filter: string = '';
   nextPage!: string;
   nextPageFavorites!: string;
   contacts!: ContactGetI;
@@ -59,7 +58,6 @@ export class HomePage implements OnInit {
   private readonly _contactService = inject(ContactService);
   private readonly _favoriteService = inject(FavoriteService);
   private readonly _eventEmissorService = inject(EventEmissorService);
-  private router = inject(Router);
   constructor() {
     console.log('se ejecuta constructor');
     this.registerIcons();
@@ -70,16 +68,16 @@ export class HomePage implements OnInit {
         next: (event) => {
           if (event.event == eventsType.UPDATE_CONTACTS) {
             this.enableInfiniteScroll();
-            this.contactsApi();
+            this.getContactsOrderFilter()
           }
           if (event.event == eventsType.UPDATE_CONTACTS_FAVORITES) {
-            this.contactsFavoritesApi();
+            this.getContactsOrderFilter()
           }
         },
       });
   }
   ngOnInit(): void {
-    this.contactsApi();
+    this.getContactsOrderFilter()
   }
   onIonInfiniteContacts(event: any) {
     if (this.isLoadingContacts) {
@@ -113,31 +111,7 @@ export class HomePage implements OnInit {
     }
     event.target.complete();
   }
-  private contactsApi() {
-    this._contactService.getContacts().subscribe({
-      next: (data) => {
-        this.contacts = data;
-        this.nextPage =
-          data.data.links.next != null ? data.data.links.next : 'null';
-      },
-    });
-  }
-  private resetValuesSearch(){
-    this.queryContacts="";
-    this.IsSearchContact = false;
-    this.filter = 'name';
-  }
-  ionViewDidEnter() {
-    console.log('vuelve a la vista');
-    this.resetValuesSearch()
-    if(this.selectedSegment == 'contacts'){
-      this.contactsApi();
-    }else{
-      this.contactsFavoritesApi()
-    }
-    this.enableInfiniteScroll();
-    this.scrollTop();
-  }
+
   private contactsApiPaginate() {
     this._contactService.getContactsPaginate(this.nextPage).subscribe({
       next: (data) => {
@@ -164,54 +138,40 @@ export class HomePage implements OnInit {
         },
       });
   }
-  private contactsFavoritesApi() {
-    this._favoriteService.getFavorites().subscribe({
-      next: (data) => {
-        this.favorites = data;
-        this.nextPageFavorites =
-          data.data.links.next != null ? data.data.links.next : 'null';
-      },
-    });
+  private getContactsOrderFilter(){
+    if (this.queryContacts !== ' ' && this.filter !== 'all') {
+      if (this.selectedSegment == 'contacts') {
+        this.getContactsFilterByNameOrderBy();
+      } else {
+        this.getContactsFavoriteFilterByNameOrderBy();
+      }
+    } else {
+      if (this.selectedSegment == 'contacts') {
+        this.getContactsFilter();
+      } else {
+        this.getContactsFavoriteFilter();
+      }
+    }
   }
   onChipClick(searchType: string) {
     this.selectedSearch = searchType;
-    if(this.queryContacts!==""){
-      if(this.selectedSegment == 'contacts'){
-        this.getContactsFilter();
-      }else{
-        this.getContactsFavoriteFilter()
-      }
-    }
-    console.log(`Selected search type: ${searchType}`);
+    this.getContactsOrderFilter()
     // Aquí se pueden agregar otras acciones que deban realizarse cuando cambia el chip seleccionado
   }
   segmentChanged(event: any) {
     this.selectedSegment = event.detail.value;
-    console.log("cambio de contacts a favorite segments")
-    if(this.selectedSegment == 'contacts'){
-      this.getContactsFilter();
-    }else{
-      this.getContactsFavoriteFilter()
-    }
+    console.log('cambio de contacts a favorite segments');
+    this.getContactsOrderFilter();
   }
 
   private registerIcons() {
     addIcons({ callOutline, starOutline, star, call, filter });
   }
-  handleInputContacts(event: any, type: string) {
-    this.queryContacts=event.target.value.toLowerCase()
+  handleInputContacts(event: any) {
+    this.queryContacts = event.target.value.toLowerCase();
     console.log(this.queryContacts);
-    if (this.selectedSegment == 'contacts') {
-      /**
-       * ?llamar a api pasamos filter a la petición
-       */
-      this.getContactsFilter();
-    } else {
-      /**
-       * ?llamar a api pasamos filter a la petición
-       */
-      this.getContactsFavoriteFilter();
-    }
+    this.getContactsOrderFilter()
+
   }
   handleChangeFilter(e: any) {
     this.filter = e.detail.value;
@@ -223,42 +183,87 @@ export class HomePage implements OnInit {
         : this.filter === 'phone'
         ? 'Telefono'
         : 'Apodo';
+        this.getContactsOrderFilter()
   }
-  private getContactsFilter(){
+  private getContactsFilterByNameOrderBy() {
     this._contactService
-        .getContactsByName(this.queryContacts, this.selectedSearch)
-        .pipe(distinctUntilChanged())
-        .subscribe({
-          next: (data) => {
-            this.contacts = data;
-            if (this.contacts.data.data.length == 0) {
-              this.IsSearchContact = true;
-            }
-            this.nextPage =
-              data.data.links.next != null ? data.data.links.next : 'null';
-          },
-          error: (error) => {
-            console.error(error);
-          },
-        });
+      .getContactsByNameAndOrder(
+        this.queryContacts,
+        this.selectedSearch,
+        this.filter != 'all' ? this.filter : ' '
+      )
+      .pipe(distinctUntilChanged())
+      .subscribe({
+        next: (data) => {
+          this.contacts = data;
+          if (this.contacts.data.data.length == 0) {
+            this.IsSearchContact = true;
+          }
+          this.nextPage =
+            data.data.links.next != null ? data.data.links.next : 'null';
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
-  private getContactsFavoriteFilter(){
+  private getContactsFavoriteFilterByNameOrderBy() {
     this._favoriteService
-        .getContactsFavoriteByName(this.queryContacts, this.selectedSearch)
-        .pipe(distinctUntilChanged())
-        .subscribe({
-          next: (data) => {
-            this.favorites = data;
-            if (this.contacts.data.data.length == 0) {
-              this.IsSearchContact = true;
-            }
-            this.nextPage =
-              data.data.links.next != null ? data.data.links.next : 'null';
-          },
-          error: (error) => {
-            console.error(error);
-          },
-        });
+      .getContactsFavoriteByNameAndOrder(
+        this.queryContacts,
+        this.selectedSearch,
+        this.filter!='all'? this.filter:''
+      )
+      .pipe(distinctUntilChanged())
+      .subscribe({
+        next: (data) => {
+          this.favorites = data;
+          if (this.contacts.data.data.length == 0) {
+            this.IsSearchContact = true;
+          }
+          this.nextPage =
+            data.data.links.next != null ? data.data.links.next : 'null';
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+  }
+  private getContactsFilter() {
+    this._contactService
+      .getContactsByName(this.queryContacts, this.selectedSearch)
+      .pipe(distinctUntilChanged())
+      .subscribe({
+        next: (data) => {
+          this.contacts = data;
+          if (this.contacts.data.data.length == 0) {
+            this.IsSearchContact = true;
+          }
+          this.nextPage =
+            data.data.links.next != null ? data.data.links.next : 'null';
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+  }
+  private getContactsFavoriteFilter() {
+    this._favoriteService
+      .getContactsFavoriteByName(this.queryContacts, this.selectedSearch)
+      .pipe(distinctUntilChanged())
+      .subscribe({
+        next: (data) => {
+          this.favorites = data;
+          if (this.contacts.data.data.length == 0) {
+            this.IsSearchContact = true;
+          }
+          this.nextPage =
+            data.data.links.next != null ? data.data.links.next : 'null';
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
   scrollTop() {
     this.content.scrollToTop(500);
