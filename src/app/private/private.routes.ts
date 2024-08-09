@@ -7,16 +7,27 @@ export const PRIVATE_ROUTES: Routes = [
     component: TabsPage,
     children: [
       {
-        path: '',
-        title:'Home',
-        loadComponent: () =>
-          import('./pages/home/home.page').then((c) => c.HomePage),
+        path:'contacts',
+        loadChildren:()=>import('./pages/Contacts/contacts.routes')
       },
+
+      {
+        path: 'user',
+        title:'Usuario',
+        loadComponent: () =>
+          import('./pages/user/user.page')
+      },
+      {
+        path: '',
+        redirectTo: 'contacts',
+        pathMatch: 'full'
+      }
     ],
   },
   {
-    path: '',
-    redirectTo: '/tabs/tab1',
-    pathMatch: 'full',
-  },
+    path:'',
+    pathMatch:'full',
+    redirectTo:'contacts'
+  }
+
 ];

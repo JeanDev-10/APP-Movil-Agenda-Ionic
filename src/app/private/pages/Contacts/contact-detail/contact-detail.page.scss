@@ -1,0 +1,49 @@
+.flex-register{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  form{
+    width: 100%;
+  }
+}
+
+ion-img{
+  width: 50%;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 1em;
+}
+.flex_button_favorites{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-avatar{
+  margin-top: 4.5em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+ion-item {
+  margin-bottom: 20px;
+}
+
+form{
+  width: 100%;
+}
+
+.breadcrumbs-left {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 16px; /* Ajustar según sea necesario */
+  font-size: 12px; /* Ajustar el tamaño del texto según sea necesario */
+}
+.breadcrumbs-left ion-breadcrumb {
+  font-size: 12px; /* Asegurarse de que el tamaño se aplique a los breadcrumbs */
+}

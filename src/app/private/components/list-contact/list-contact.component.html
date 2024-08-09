@@ -1,0 +1,6 @@
+<ion-item [routerLink]="'/dashboard/contacts/'+contact.id">
+  <ion-avatar>
+    <app-avatar-initials [firstName]="firtsname" [lastName]="lastname" customClass="small" />
+    </ion-avatar>
+  <ion-label> {{contact.name|titlecase}} {{contact.nickname?'('+contact.nickname+')':'' | titlecase}} </ion-label>
+</ion-item>

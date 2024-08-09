@@ -1,0 +1,35 @@
+
+ion-list{
+  margin-top: 1em;
+}
+.crear-contacto{
+  margin-top: .3em;
+}
+
+ion-searchbar{
+  margin-top: .5em;
+}
+.flex_search_and_filter{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  ion-searchbar{
+    width: 70%;
+  }
+  ion-item{
+    width: 30%;
+  }
+}
+.flex_filter{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 1.5em;
+}
+.searchContact{
+  margin-top: 1em;
+}
+.flex_options{
+
+  background-color: red;
+}

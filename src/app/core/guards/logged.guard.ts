@@ -1,6 +1,13 @@
-import { CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { LocalStorageService } from '../services/local-storage.service';
 
 export const loggedGuard: CanActivateFn = (route, state) => {
-  //logica de guardia para saber si está logeado o no
-  return true;
+  const localStorageService=inject(LocalStorageService);
+	if (localStorageService.loggedIn()) {
+		const router = inject(Router);
+		router.navigateByUrl('/dashboard');
+		return false;
+	}
+	return true;
 };

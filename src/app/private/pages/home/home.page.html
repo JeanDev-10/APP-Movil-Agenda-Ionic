@@ -1,13 +1,99 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>home</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-navbar [title]="'Contactos'" />
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-segment
+    value="contacts"
+    color="medium"
+    (ionChange)="segmentChanged($event)"
+  >
+    <ion-segment-button value="contacts">
+      <ion-icon
+        [name]="selectedSegment==='contacts'?'call':'call-outline'"
+      ></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="favorites">
+      <ion-icon
+        [name]="selectedSegment==='favorites'?'star':'star-outline'"
+      ></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+  <div class="flex_search_and_filter searchContact">
+    <ion-searchbar
+      [debounce]="1000"
+      (ionInput)="handleInputContacts($event)"
+    >
+    </ion-searchbar>
+    <ion-item>
+      <ion-select value="all" (ionChange)="handleChangeFilter($event)">
+        <ion-select-option value="all">Todos</ion-select-option>
+        <ion-select-option value="name">Nombre</ion-select-option>
+        <ion-select-option value="nickname">Apodo</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+  <div class="flex_filter">
+    <ion-chip
+      size="sm"
+      [outline]="true"
+      [color]="selectedSearch === 'name' ? 'success' : 'default'"
+      (click)="onChipClick('name')"
+      >Nombre</ion-chip
+    >
+    <ion-chip
+      size="sm"
+      [outline]="true"
+      [color]="selectedSearch === 'nickname' ? 'success' : 'default'"
+      (click)="onChipClick('nickname')"
+      >Apodo</ion-chip
+    >
+  </div>
+
+  @if(selectedSegment==='contacts'){
+
+  <ion-item class="crear-contacto" routerLink="/dashboard/contacts/create">
+    <ion-avatar aria-hidden="true" slot="start">
+      <app-avatar-initials firstName="C" lastName="C" customClass="small" />
+    </ion-avatar>
+    <ion-label>Crear Contacto</ion-label>
+  </ion-item>
+  } @if(selectedSegment==='contacts'){
+  <ion-list>
+    @if(contacts){ @for(item of contacts.data.data; track item.id) {
+    <app-list-contact [contact]="item" />} @empty { @if(IsSearchContact===true){
+    <app-list-no-contact [text]="'No se ha encontrado ningún contacto'" />
+    }@else {
+    <app-list-no-contact [text]="'No tienes contactos favoritos'" />
+    } } }
+  </ion-list>
+  <ion-infinite-scroll
+    (ionInfinite)="onIonInfiniteContacts($event)"
+    [disabled]="isLoadingContacts"
+  >
+    <ion-infinite-scroll-content
+      loadingText="Cargando más contactos"
+      loadingSpinner="bubbles"
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  } @if(selectedSegment==='favorites'){
+  <ion-list>
+    @if(favorites){ @for(item of favorites.data.data; track item.id) {
+    <app-list-contact [contact]="item.contact" />
+
+    } @empty { @if(IsSearchContact===true){
+    <app-list-no-contact [text]="'No se ha encontrado ningún contacto'" />
+    }@else {
+    <app-list-no-contact [text]="'No tienes contactos favoritos'" />
+    } } }
+  </ion-list>
+  <ion-infinite-scroll
+    (ionInfinite)="onIonInfiniteContactsFavorites($event)"
+    [disabled]="isLoadingContactsFavorite"
+  >
+    <ion-infinite-scroll-content
+      loadingText="Cargando más contactos favoritos"
+      loadingSpinner="bubbles"
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  }
 </ion-content>

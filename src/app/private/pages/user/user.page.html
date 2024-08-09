@@ -1,0 +1,49 @@
+<app-navbar [title]="'Perfil'" />
+
+<ion-content [fullscreen]="true">
+  <ion-avatar>
+    <app-avatar-initials
+      [firstName]="firstName"
+      [lastName]="lastName"
+      customClass="large"
+    />
+  </ion-avatar>
+  <ion-segment value="perfil" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="perfil">
+      <ion-label>Datos de perfil</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="password">
+      <ion-label>Contraseña</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="settings">
+      <ion-label>Configuración</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div class="container-information-password-profile">
+    @if(selectedSegment==='perfil'){
+    <app-edit-profile (avatarName)="handleAvatarNaem($event)" />
+    } @if(selectedSegment==='password'){
+    <app-edit-password />
+    } @if(selectedSegment==='settings'){
+    <div class="flex_mode_dark_light">
+      <ion-toggle (ionChange)="toogleTheme()">
+      Cambiar modo Oscuro/Claro
+    </ion-toggle>
+    </div>
+    <div class="flex_button_register">
+      <ion-button
+        (click)="logout()"
+        fill="outline"
+        color="danger"
+        size="default"
+      >
+        Logout
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      </ion-button>
+    </div>
+    }
+  </div>
+
+  <!-- Otras propiedades del usuario -->
+</ion-content>

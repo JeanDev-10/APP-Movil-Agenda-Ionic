@@ -1,0 +1,133 @@
+<app-navbar [title]="'Detalle de Contacto'" [hrefDefault]="'/dashboard'" />
+
+<ion-content [fullscreen]="true">
+  <ion-header>
+    <ion-toolbar>
+      <ion-breadcrumbs class="breadcrumbs-left">
+        <ion-breadcrumb routerLink="/dashboard">
+          Contactos
+          <ion-icon slot="separator" name="arrow-forward-circle"></ion-icon>
+        </ion-breadcrumb>
+        <ion-breadcrumb>
+          Detalle de Contacto
+          <ion-icon slot="separator" name="arrow-forward-circle"></ion-icon>
+        </ion-breadcrumb>
+      </ion-breadcrumbs>
+    </ion-toolbar>
+  </ion-header>
+  <div class="container-avatar">
+    <app-avatar-initials
+      [firstName]="firstName"
+      [lastName]="lastName"
+      customClass="large"
+    />
+  </div>
+  <form [formGroup]="contactForm" (submit)="editContact()">
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input
+        formControlName="name"
+        fill="outline"
+        [clearInput]="true"
+        [counter]="true"
+        maxlength="50"
+        type="text"
+        placeholder="Jean Pierre"
+      ></ion-input>
+
+      @if(name?.invalid && (name?.dirty || name?.touched)){
+      @if(name?.hasError('required')){
+      <ion-note color="danger"> Nombre es requerido. </ion-note>
+      } @if(name?.hasError('minlength')) {
+      <ion-note color="danger"> Debe tener mínimo 3 caracteres. </ion-note>
+
+      } @if(name?.hasError('maxlength')) {
+      <ion-note color="danger">
+        Como máximo se permiten 50 caracteres.
+      </ion-note>
+
+      } }
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Telefono</ion-label>
+      <ion-input
+        formControlName="phone"
+        fill="outline"
+        [clearInput]="true"
+        [counter]="true"
+        maxlength="10"
+        minlength="10"
+        type="text"
+        placeholder="0987654320"
+      ></ion-input>
+      @if(phone?.invalid && (phone?.dirty || phone?.touched)){
+      @if(phone?.hasError('required')){
+      <ion-note color="danger"> Telefono es requerido. </ion-note>
+      } @if(phone?.hasError('minlength')) {
+      <ion-note color="danger"> Debe tener mínimo 10 caracteres. </ion-note>
+
+      } @if(phone?.hasError('maxlength')) {
+      <ion-note color="danger">
+        Como máximo se permiten 10 caracteres.
+      </ion-note>
+
+      } @if(phone?.hasError('pattern')) {
+      <ion-note color="danger"> Solo se permiten caracteres del 0-9. </ion-note>
+
+      } }
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Apodo (opcional)</ion-label>
+      <ion-input
+        formControlName="nickname"
+        fill="outline"
+        [clearInput]="true"
+        [counter]="true"
+        maxlength="50"
+        type="text"
+        placeholder="JP"
+      ></ion-input>
+      @if(nickname?.invalid && (nickname?.dirty || nickname?.touched)){
+      @if(nickname?.hasError('minlength')) {
+      <ion-note color="danger"> Debe tener mínimo 3 caracteres. </ion-note>
+      } @if(nickname?.hasError('maxlength')) {
+      <ion-note color="danger">
+        Como máximo se permiten 10 caracteres.
+      </ion-note>
+
+      } }
+    </ion-item>
+
+    <div class="flex_button_favorites">
+      <ion-button
+        (click)="toggleEditMode()"
+        [fill]="'outline'"
+        type="button"
+        [disabled]="contactForm.invalid && isEditMode"
+      >
+        <ion-icon name="pencil-outline"></ion-icon>
+        {{ isEditMode ? 'Guardar' : 'Editar' }}
+      </ion-button>
+      <ion-button
+        *ngIf="isEditMode"
+        (click)="cancelEdit()"
+        fill="outline"
+        type="button"
+        color="danger"
+      >
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
+      <ion-button
+        (click)="presentAlertDelete()"
+        [fill]="'outline'"
+        type="button"
+        color="danger"
+      >
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="addFavorites()" color="warning" fill="outline">
+        <ion-icon [name]="isContactFavorite?'star':'star-outline'"></ion-icon>
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

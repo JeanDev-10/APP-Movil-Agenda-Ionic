@@ -4,11 +4,11 @@ export const PUBLIC_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./pages/welcome/welcome.page').then((c) => c.WelcomePage),
+      import('./pages/welcome/welcome.page')
   },
   {
     path: 'auth',
     loadChildren: () =>
-      import('../auth/auth,.routes').then((m) => m.AUTH_ROUTES),
+      import('../auth/auth.routes')
   },
 ];

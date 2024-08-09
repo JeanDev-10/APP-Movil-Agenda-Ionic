@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const AUTH_ROUTES: Routes = [
+export default [
   {
     path: '',
     redirectTo: 'register',
@@ -11,12 +11,12 @@ export const AUTH_ROUTES: Routes = [
     path: 'login',
     title: 'Login',
     loadComponent: () =>
-      import('./pages/login/login.page').then((c) => c.LoginPage),
+      import('./pages/login/login.page')
   },
   {
     path: 'register',
     title: 'Register',
     loadComponent: () =>
-      import('./pages/register/register.page').then((e) => e.RegisterPage),
+      import('./pages/register/register.page')
   },
-];
+] as Routes;

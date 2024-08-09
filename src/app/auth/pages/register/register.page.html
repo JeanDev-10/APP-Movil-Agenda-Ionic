@@ -1,13 +1,187 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-navbar [title]="'Agenda App'"></app-navbar>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">register</ion-title>
+      <ion-breadcrumbs class="breadcrumbs-left">
+        <ion-breadcrumb routerLink="/">
+          Bienvenida
+          <ion-icon slot="separator" name="arrow-forward-circle"></ion-icon>
+        </ion-breadcrumb>
+        <ion-breadcrumb>
+          Registro
+          <ion-icon slot="separator" name="arrow-forward-circle"></ion-icon>
+        </ion-breadcrumb>
+      </ion-breadcrumbs>
     </ion-toolbar>
   </ion-header>
+
+  <div class="flex-register">
+    <ng-lottie [options]="options" [styles]="styles"></ng-lottie>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-label position="stacked">Nombres</ion-label>
+        <ion-input
+          formControlName="firstname"
+          fill="outline"
+          [clearInput]="true"
+          [counter]="true"
+          maxlength="30"
+          placeholder="Jean Pierre"
+        ></ion-input>
+        @if(getformHasError('firstname','required')&&getFormHasTouch('firstname')){
+        <ion-note color="danger"> Nombres es requerido </ion-note>
+        }
+        @if(getformHasError('firstname','minlength')&&getFormHasTouch('firstname')){
+        <ion-note color="danger">
+          Nombres debe tener al menos 3 caracteres.
+        </ion-note>
+
+        }
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Apellidos</ion-label>
+        <ion-input
+          formControlName="lastname"
+          fill="outline"
+          [clearInput]="true"
+          [counter]="true"
+          maxlength="50"
+          placeholder="Rodríguez"
+        ></ion-input>
+
+        @if(getformHasError('lastname','required')&&getFormHasTouch('lastname')){
+        <ion-note color="danger"> Nombres es requerido. </ion-note>
+
+        }
+        @if(getformHasError('lastname','minlength')&&getFormHasTouch('lastname')){
+        <ion-note color="danger">
+          Nombres debe tener al menos 3 caracteres.
+        </ion-note>
+
+        }
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Correo</ion-label>
+        <ion-input
+          formControlName="email"
+          fill="outline"
+          [clearInput]="true"
+          [counter]="true"
+          maxlength="50"
+          type="email"
+          placeholder="example@hotmail.com"
+        ></ion-input>
+        <ion-note color="danger">
+          @if(getformHasError('email','required')&&getFormHasTouch('email')){
+          Correo es requerido. }
+          @if(getformHasError('email','email')&&getFormHasTouch('email')){
+          Correo invalido. }
+        </ion-note>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          formControlName="password"
+          fill="outline"
+          [counter]="true"
+          maxlength="10"
+          [type]="IsPassword ? 'text' : 'password'"
+          placeholder="**********"
+        >
+          <ion-button
+            (click)="SeePassword('password')"
+            fill="clear"
+            [color]="registerForm.get('password')?.invalid&&getFormHasTouch('password')?'danger':'primary'"
+            slot="end"
+            aria-label="Show/hide"
+          >
+            <ion-icon
+              slot="icon-only"
+              [name]="IsPassword ? 'eye-outline' : 'eye-off-outline'"
+              aria-hidden="true"
+            ></ion-icon>
+          </ion-button>
+        </ion-input>
+        @if(getformHasError('password','required') &&
+        getFormHasTouch('password')){
+        <ion-note color="danger"> Contraseña es requerida. </ion-note>
+        } @if(getformHasError('password','minlength') &&
+        getFormHasTouch('password')){
+        <ion-note color="danger">
+          Contraseña debe tener mínimo 3 caracteres
+        </ion-note>
+
+        } @if(getformHasError('password','maxlength') &&
+        getFormHasTouch('password')){
+        <ion-note color="danger">
+          Contraseña debe tener máximo 10 caracteres
+        </ion-note>
+
+        }
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Confirmar Contraseña</ion-label>
+        <ion-input
+          formControlName="confirmPassword"
+          fill="outline"
+          [counter]="true"
+          maxlength="10"
+          [type]="IsConfirmationPassword ? 'text' : 'password'"
+          placeholder="**********"
+        >
+          <ion-button
+            (click)="SeePassword('Confirmation_password')"
+            fill="clear"
+            [color]="registerForm.get('confirmPassword')?.invalid&&getFormHasTouch('confirmPassword')?'danger':'primary'"
+            slot="end"
+            aria-label="Show/hide"
+          >
+            <ion-icon
+              slot="icon-only"
+              [name]="IsConfirmationPassword ? 'eye-outline' : 'eye-off-outline'"
+              aria-hidden="true"
+            ></ion-icon>
+          </ion-button>
+        </ion-input>
+        @if(getformHasError('confirmPassword','required') &&
+        getFormHasTouch('confirmPassword')){
+        <ion-note color="danger">
+          Confirmación de contraseña es requerida.
+        </ion-note>
+        } @if(getformHasError('confirmPassword','minlength') &&
+        getFormHasTouch('confirmPassword')){
+        <ion-note color="danger">
+          Confirmación de contraseña debe tener mínimo 3 caracteres
+        </ion-note>
+        } @if(getformHasError('confirmPassword','maxlength') &&
+        getFormHasTouch('confirmPassword')){
+        <ion-note color="danger">
+          Confirmación de contraseña debe tener máximo 10 caracteres
+        </ion-note>
+        }
+        @if(registerForm.hasError('passwordMismatch')&&getFormHasTouch('confirmPassword')){
+        <ion-note color="danger"> Las contraseñas deben coincidir </ion-note>
+        }
+      </ion-item>
+
+      <div class="flex_button_register">
+        <ion-text color="secondary" routerLink="/auth/login">
+          <p>¿Ya tienes cuenta?</p>
+        </ion-text>
+        <ion-button
+          [fill]="registerForm.invalid?'outline':'clear'"
+          type="submit"
+          [disabled]="registerForm.invalid"
+        >
+          <ion-icon name="person-add-outline"></ion-icon>
+          Registrarse
+        </ion-button>
+      </div>
+    </form>
+  </div>
 </ion-content>

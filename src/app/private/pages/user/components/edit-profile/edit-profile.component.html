@@ -1,0 +1,62 @@
+<!-- Otras secciones de información del perfil -->
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <ion-item>
+    <ion-label position="stacked">Nombres</ion-label>
+    <ion-input
+      formControlName="firstName"
+      fill="outline"
+      [clearInput]="true"
+      [counter]="true"
+      maxlength="30"
+      placeholder="Jean Pierre"
+    ></ion-input>
+    @if(getformHasError(registerForm,'firstName','required')&&getFormHasTouch(registerForm,'firstName')){
+    <ion-note color="danger"> Nombres es requerido </ion-note>
+    }
+    @if(getformHasError(registerForm,'firstName','minlength')&&getFormHasTouch(registerForm,'firstName')){
+    <ion-note color="danger"
+      >Nombres debe tener al menos 3 caracteres.</ion-note
+    >
+    }
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Apellidos</ion-label>
+    <ion-input
+      formControlName="lastName"
+      fill="outline"
+      [clearInput]="true"
+      [counter]="true"
+      maxlength="50"
+      placeholder="Rodríguez"
+    ></ion-input>
+
+    @if(getformHasError(registerForm,'lastName','required')&&getFormHasTouch(registerForm,'lastName')){
+    <ion-note color="danger"> Apellidos es requerido </ion-note>
+    }
+    @if(getformHasError(registerForm,'lastName','minlength')&&getFormHasTouch(registerForm,'lastName')){
+    <ion-note color="danger">
+      Apellidos debe tener al menos 3 caracteres.
+    </ion-note>
+    }
+  </ion-item>
+  <div class="flex_button_register">
+    <ion-button
+      [disabled]="registerForm.invalid && isEditing"
+      fill="outline"
+      (click)="toggleEdit()"
+    >
+      <ion-icon slot="start" name="pencil-outline"></ion-icon>
+      {{ isEditing ? "Guardar" : "Editar" }}
+    </ion-button>
+    <ion-button
+      *ngIf="isEditing"
+      (click)="cancelEdit()"
+      fill="outline"
+      type="button"
+      color="danger"
+    >
+      <ion-icon name="close-circle-outline"></ion-icon>
+    </ion-button>
+  </div>
+</form>
